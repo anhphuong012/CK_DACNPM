@@ -1,0 +1,127 @@
+* {
+
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+
+}
+.bg-white {
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+.mr-l-r-auto{
+    margin-left: auto;
+    margin-right: auto;
+}
+.wrap-search {
+    min-width: 70% !important;
+}
+
+.search {
+    border-radius: 30px !important;
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+    border-color: transparent !important;
+    padding-right: 45px !important;
+    width: 100%;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    padding-left: 20px !important;
+    padding-right: 50px !important;
+}
+.w-50 {
+    max-width: 60%;
+}
+.search:focus {
+    outline: none;
+    border-color: white !important;
+}
+
+.btn-search {
+    border: none;
+    background-color: transparent;
+    position: absolute;
+    padding: 4px;
+    right: 14px;
+    align-items: center;
+    margin-top: 6px;
+    z-index: 99999;
+}
+
+.btn-search:hover {
+    opacity: 0.5;
+}
+.just-center {
+    justify-content: center !important;
+    display: flex !important;
+}
+.bg-gray-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity)) !important;
+}
+.color-primary {
+    --tw-text-opacity: 1;
+        color: rgb(25 117 220 / var(--tw-text-opacity)) !important;
+}
+.boder-b {
+    border-bottom: 1px solid #e5e7eb;
+        
+}
+.pd-30 {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+}
+.w-90 {
+    max-width: 800px !important;
+}
+.border-radius {
+    border-radius: 10px;
+}
+.result-search {
+        padding: 12px;
+        text-align: justify;
+        padding-left: 20px;
+         border-radius: 10px 10px 0px 0px;
+         color: #374151;
+         font-size: 14px;
+         font-style: italic;
+}
+.name-doctor {
+    font-size: 1.125rem;
+        line-height: 1.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        color:#1F2937
+}
+.name-doctor:hover{
+    text-decoration: dashed !important;
+    opacity: 0.8;
+}
+.infor-doctor {
+    display: flex;
+    flex-direction: column;
+}
+.text-sm {
+    font-size: .875rem;
+    line-height: 1.25rem;
+}
+.font-medium {
+    font-weight: 500;
+}
+.py-1 {
+    padding-top: .25rem !important;
+    padding-bottom: .25rem !important;
+}
+.px-3 {
+    padding-left: .75rem !important;
+    padding-right: .75rem !important;
+}
+.infor-center {
+    margin-top: 6px;
+    margin-bottom: 7px;
+}
+.warp-btn-booking {
+    align-self: center;
+  
+    margin-left: auto;
+}

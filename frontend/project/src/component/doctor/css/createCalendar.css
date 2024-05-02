@@ -1,0 +1,271 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+ul li {
+    list-style-type: none;
+}
+
+.content {
+    width: 100%;
+    height: auto;
+    background-color: #fff;
+    overflow-x: hidden;
+    margin-top: -1%;
+}
+
+.mainInfo {
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    background-color: #f1f5f9;
+}
+
+.mainDiv {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+}
+
+.titlePage {
+    width: 100%;
+    height: auto;
+    padding: 25px 15px 20px 0;
+}
+
+.titleHome {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    margin-bottom: 0;
+}
+
+.createCalendar {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px 25px 0 25px;
+    margin-bottom: 30px;
+}
+
+.infoDoctor {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: start;
+}
+
+.infoDiv {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: start;
+    padding: 15px 25px 15px 25px;
+}
+
+.imgDoctor {
+    width: 200px;
+    height: 210px;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid #afafaf;
+}
+
+.imgDoctor img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.textInfo {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    margin-left: 3%;
+    font-size: 20px;
+}
+
+.nameDoctor, .emailDoctor, .phoneDoctor, .ageDoctor {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.inputCalendars {
+    width: 100%;
+    height: 100%;
+    margin-top: 15px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+
+.inputCalendar {
+    width: auto;
+    height: 100%;
+    margin: 5px 25px 0 25px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+}
+
+.titleInput {
+    color: #000;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.chooseDate {
+    width: 100%;
+    height: max-content;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+}
+
+.p-symbol {
+    margin: 0 3px;
+}
+
+.morningTime {
+    margin-top: 15px;
+}
+
+.textTime {
+    color: #797979;
+    font-weight: 400;
+    font-size: 20px;
+    margin-bottom: 0;
+}
+
+.inputTime1, .inputTime2 {
+    width: 230px;
+    height: 35px;
+    margin-left: 2%;
+    margin-right: 2%;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding-left: 15px;
+    padding-right: 5px;
+}
+
+
+.titleMinuteInput {
+    margin-top: 15px;
+}
+
+.inputDiv2 {
+    width: 100%;
+    height: max-content;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    /* margin-left: 35px; */
+}
+
+.inputMinutes {
+    width: 100px;
+    border-radius: 5px;
+    border: 1px solid #000;
+    margin-right: 15px;
+    padding-left: 15px;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font-size: 18px;
+}
+
+.submitButton {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 25px 0 0;
+    margin-top: 3%;
+}
+
+.createCalendarButton {
+    border: 1px solid #2680ff;
+    border-radius: 10px;
+    font-size: 20px;
+    background-color: #fff;
+    color: #2680ff;
+    padding: 10px 36px 10px 36px;
+}
+
+.createCalendarButton:active, .createCalendarButton:hover {
+    background-color: #2680ff;
+    color: #fff;
+}
+
+.bannerDiv {
+    width: 100%;
+    height: 100%;
+    margin-top: 30px;
+}
+
+.imgBanner {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.imgBanner img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+
+}
+
+.morningTime, .eveningTime {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+.timeDiv {
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 30px;
+    row-gap: 15px;
+}
+
+.listTime {
+    border-radius: 10px;
+    border: 1px solid #398bff;
+    padding: 15px 30px 15px 30px;
+    font-size: 18px;
+    background-color: #fff;
+}
+
+.listTime:active {
+    background-color: #398bff;
+    color: #fff;
+}
+
+.listTime.selected {
+    background-color: red;
+    color: white;
+  }

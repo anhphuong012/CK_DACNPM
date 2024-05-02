@@ -1,0 +1,36 @@
+* {
+
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+
+}
+.bg-slate-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(241 245 249 / var(--tw-bg-opacity));
+}
+.bg-gray {
+    --tw-text-opacity: 1;
+        color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+.text-lg {
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+.pd-t-20{
+    padding-top: 20px;
+}
+.pd-20{
+    padding: 20px;
+}
+.pd-b-40 {
+    padding-bottom: 40px;
+}
+.wrap__btn-cancel {
+    margin-bottom: 10px;
+        text-align: end;
+}
