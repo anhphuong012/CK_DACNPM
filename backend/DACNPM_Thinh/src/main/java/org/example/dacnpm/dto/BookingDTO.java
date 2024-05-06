@@ -1,6 +1,6 @@
 package org.example.dacnpm.dto;
 
-import java.util.Date;
+import java.sql.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -17,10 +17,10 @@ public class BookingDTO {
 
 	private Long patientId;
 	
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern="dd-MM-yyyy")
 	private Date date;
 	
-	
+	private String time;
 	
 	public BookingDTO() {
 		
@@ -60,6 +60,18 @@ public class BookingDTO {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+
+
+	public String getTime() {
+		return time;
+	}
+
+
+
+	public void setTime(String time) {
+		this.time = time;
 	}
 
 

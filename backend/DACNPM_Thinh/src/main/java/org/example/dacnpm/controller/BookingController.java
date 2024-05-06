@@ -1,5 +1,7 @@
 package org.example.dacnpm.controller;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,6 +47,7 @@ public class BookingController {
 		booking.setDate(bookingDTO.getDate());
 		booking.setDoctor(doctor);
 		booking.setPatient(patient);
+		booking.setTime(bookingDTO.getTime());
 		booking.setStatus(1);
 		
 		if(bookingRepository.save(booking)!=null) {
@@ -61,20 +65,43 @@ public class BookingController {
 	}
 	
 	@GetMapping("/doctor/{id}")
-	public @ResponseBody ResponseEntity<ReposeOject> getBookingByDoctorId(@PathVariable("id")long doctorId){
+	public @ResponseBody ResponseEntity<ReposeOject> getBookingByDoctorId(@PathVariable("id")long doctorId,@RequestParam(value = "date",required = false) String date){
 		Doctor doctor = doctorRepository.findById(doctorId).get();
 		
 		List<Booking> bookings = bookingRepository.findByDoctor(doctor);
 		
+		
 		List<BookingReturnDTO> bookingResult = new ArrayList<>();
 		
-		for (Booking book : bookings) {
-			bookingResult.add(BookingReturnDTO.convertBookingReturnDTO(book));
+		if(date !=null) {
+			List<Booking> bookingOfDate = new ArrayList<>();
+			
+			Date dateOut ;
+			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			for (Booking booking : bookings) {
+				
+				dateOut = booking.getDate();
+				
+				
+				if(formatter.format(dateOut).equals(date)) {
+					bookingOfDate.add(booking);
+				}
+			}
+			
+		
+			
+			for (Booking book : bookingOfDate) {
+				bookingResult.add(BookingReturnDTO.convertBookingReturnDTO(book));
+			}
+		}else {
+			for (Booking book : bookings) {
+				bookingResult.add(BookingReturnDTO.convertBookingReturnDTO(book));
+			}
 		}
 		
 		DoctorDTO result = DoctorDTO.convert(doctor);
 		result.setBookings(bookingResult);
-		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
+		return ResponseEntity.status(HttpStatus.OK).body(
     			new ReposeOject("success", " Success",result )
     			);
 
@@ -91,13 +118,19 @@ public class BookingController {
 		List<BookingReturnDTO> bookingResult = new ArrayList<>();
 		
 		for (Booking book : bookings) {
+			
 			bookingResult.add(BookingReturnDTO.convertBookingReturnDTO(book));
+			
 		}
+		
+
 		
 		PatientDTO result = PatientDTO.convert(patient);
 		result.setBookins(bookingResult);
-		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
-    			new ReposeOject("success", " Success",result )
+		
+		
+		return ResponseEntity.status(HttpStatus.OK).body(
+    			new ReposeOject("success", " Success",result.getBookins())
     			);
 
 

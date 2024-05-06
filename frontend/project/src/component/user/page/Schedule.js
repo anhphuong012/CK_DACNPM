@@ -44,7 +44,7 @@ export default function Schedule() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetchData(0);
+    fetchData(1);
   }, []);
 
   const fetchData = (id) => {
@@ -53,8 +53,9 @@ export default function Schedule() {
     fetchPromise
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.data);
         if (data.data != null) {
-          setData(data.data.bookins);
+          setData(data.data);
         }
       });
   };
@@ -94,7 +95,7 @@ export default function Schedule() {
               </TableHead>
               <TableBody>
                 {data != [] &&
-                  data.length > 0 &&
+                  data != undefined &&
                   data.map((item, index) => (
                     <TableRow
                       key={index}
