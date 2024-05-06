@@ -106,7 +106,7 @@ export default function ListSearch() {
           >
             <div class="input-group mb-3 input-group-lg w-50 ">
               <input
-                placeholder="Nhập triệu chứng,..."
+                placeholder="Nhập triệu chứng,tên bác sĩ..."
                 type="text"
                 class="form-control search bg-gray-100"
                 id="input-search"
@@ -128,12 +128,14 @@ export default function ListSearch() {
           <div className="bg-white result-search">
             {data.length > 0 && (
               <span>
-                Có {data.length} Bác sĩ được tìm thấy cho triệu chứng "{keyword}
-                "
+                Có {data.length} Bác sĩ được tìm thấy cho triệu chứng hoặc tên "
+                {keyword}"
               </span>
             )}
             {data.length == 0 && (
-              <span>Không tìm thấy Bác sĩ cho triệu chứng "{keyword}"</span>
+              <span>
+                Không tìm thấy Bác sĩ cho triệu chứng hoặc tên "{keyword}"
+              </span>
             )}
           </div>
           <Divider></Divider>

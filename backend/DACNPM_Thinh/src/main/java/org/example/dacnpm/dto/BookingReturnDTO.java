@@ -1,6 +1,6 @@
 package org.example.dacnpm.dto;
 
-import java.util.Date;
+import java.sql.Date;
 
 import org.example.dacnpm.model.Booking;
 import org.example.dacnpm.model.Patient;
@@ -12,8 +12,10 @@ public class BookingReturnDTO {
 	private PatientDTO patient;
 	private DoctorDTO doctor;
 	
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern="dd-MM-yyyy")
 	private Date date;
+	
+	private String time;
 	
 	private Integer status;
 	
@@ -27,12 +29,29 @@ public class BookingReturnDTO {
 
 
 
-	public BookingReturnDTO(Long id, PatientDTO patient, DoctorDTO doctor, Date date, Integer status) {
+//	public BookingReturnDTO(Long id, PatientDTO patient, DoctorDTO doctor, Date date, Integer status) {
+//		super();
+//		this.id = id;
+//		this.patient = patient;
+//		this.doctor = doctor;
+//		this.date = date;
+//		this.status = status;
+//	}
+
+
+	
+
+
+
+
+
+	public BookingReturnDTO(Long id, PatientDTO patient, DoctorDTO doctor, Date date, String time, Integer status) {
 		super();
 		this.id = id;
 		this.patient = patient;
 		this.doctor = doctor;
 		this.date = date;
+		this.time = time;
 		this.status = status;
 	}
 
@@ -93,10 +112,21 @@ public class BookingReturnDTO {
 		this.status = status;
 	}
 
-
-	public static BookingReturnDTO convertBookingReturnDTO(Booking booking) {
-		return new BookingReturnDTO(booking.getId(),PatientDTO.convert(booking.getPatient()),DoctorDTO.convert(booking.getDoctor()),booking.getDate(),booking.getStatus());
+	public String getTime() {
+		return time;
 	}
+
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+	public static BookingReturnDTO convertBookingReturnDTO(Booking booking) {
+		return new BookingReturnDTO(booking.getId(),PatientDTO.convert(booking.getPatient()),DoctorDTO.convert(booking.getDoctor()),booking.getDate(),booking.getTime(),booking.getStatus());
+	}
+
+
+
+
 	
 	
 

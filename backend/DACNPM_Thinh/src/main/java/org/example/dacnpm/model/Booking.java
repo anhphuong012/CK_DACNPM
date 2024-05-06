@@ -1,6 +1,7 @@
 package org.example.dacnpm.model;
 
-import java.util.Date;
+import java.sql.Date;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -27,8 +28,12 @@ public class Booking {
 	private Patient patient;
 	
 	@Column(name = "date")
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern="dd-MM-yyyy")
 	private Date date;
+	
+	
+	@Column(name = "time")
+	private String time;
 	
 	@Column(name ="status")
 	private Integer status;
@@ -63,8 +68,8 @@ public class Booking {
 	}
 
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDate(Date date2) {
+		this.date = date2;
 	}
 
 
@@ -80,6 +85,16 @@ public class Booking {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+
+	public String getTime() {
+		return time;
+	}
+
+
+	public void setTime(String time) {
+		this.time = time;
 	}
 	
 	

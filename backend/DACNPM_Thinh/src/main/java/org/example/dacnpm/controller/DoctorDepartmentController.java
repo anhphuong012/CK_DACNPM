@@ -42,7 +42,7 @@ public class DoctorDepartmentController {
 		if (!sick.equals("")) {
 			Sick findSick = sickRepository.findByName(sick);
 
-			if(findSick !=null) {
+			if (findSick != null) {
 				System.out.println(findSick.getDepartment().getName());
 
 				Optional<Department> department = departmentRepository.findById(findSick.getDepartment().getId());
@@ -59,35 +59,49 @@ public class DoctorDepartmentController {
 							.body(new ReposeOject("ok", "Query Shedule successfully", result));
 				} else {
 
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ReposeOject("error", "Not Found", null));
+					return ResponseEntity.status(HttpStatus.NOT_FOUND)
+							.body(new ReposeOject("error", "Not Found", null));
 
 				}
-			}else {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ReposeOject("error", "Not Found", null));
+			} else {
+				List<Doctor> doctors = doctorRepository.findByFullNameContains(sick);
+				if (doctors.size() > 0) {
+					
+					List<DoctorDTO> result = new ArrayList<>();
+
+					for (Doctor doctor : doctors) {
+						System.out.println("Doctor:" + doctor.getFullName());
+						result.add(DoctorDTO.convert(doctor));
+					}
+					return ResponseEntity.status(HttpStatus.OK)
+							.body(new ReposeOject("ok", "Query Shedule successfully", result));
+				} else {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND)
+							.body(new ReposeOject("error", "Not Found", null));
+				}
 			}
 		} else {
 			List<DoctorDTO> doctor = new ArrayList<>();
 			Iterator<Doctor> findDoctor = doctorRepository.findAll().iterator();
-			
-			while(findDoctor.hasNext()) {
+
+			while (findDoctor.hasNext()) {
 				doctor.add(DoctorDTO.convert(findDoctor.next()));
 			}
-			
+
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new ReposeOject("ok", "Query Shedule successfully", doctor));
 		}
 	}
 
 	@GetMapping
-	public @ResponseBody ResponseEntity<ReposeOject> finDoctorById(@PathVariable Long id){
+	public @ResponseBody ResponseEntity<ReposeOject> finDoctorById(@PathVariable Long id) {
 		Optional<Doctor> doctor = doctorRepository.findById(id);
-		
-		if(doctor.isPresent()) {
+
+		if (doctor.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new ReposeOject("ok", "Query Shedule successfully", DoctorDTO.convert(doctor.get())));
-		}else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ReposeOject("failed", "Not found", null));
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ReposeOject("failed", "Not found", null));
 		}
 	}
 }

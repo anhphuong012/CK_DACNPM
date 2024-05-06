@@ -14,6 +14,8 @@ import Tab from "@mui/material/Tab";
 import TodayIcon from "@mui/icons-material/Today";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
+import { format, addDays, addMonths } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -59,15 +61,21 @@ export default function Booking() {
 
   const [booking, setBooking] = useState([]);
 
-  const listDay = [
-    "2024-04-13",
-    "2024-04-14",
-    "2024-04-15",
-    "2024-04-16",
-    "2024-04-17",
-    "2024-04-18",
-    "2024-04-19",
-  ];
+  const [listDay, setListDay] = useState([]);
+
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const navigate = useNavigate();
+
+  // const listDay = [
+  //   "2024-04-13",
+  //   "2024-04-14",
+  //   "2024-04-15",
+  //   "2024-04-16",
+  //   "2024-04-17",
+  //   "2024-04-18",
+  //   "2024-04-19",
+  // ];
 
   const minute = ["00", "15", "30", "45"];
   const hourMoning = ["7", "8", "9", "10"];
@@ -82,9 +90,17 @@ export default function Booking() {
 
   useEffect(() => {
     fetchData(keyword);
-
+    setListDay(getNextDays(7));
     // setBooking(data.bookings);
   }, []);
+
+  const getNextDays = (numberOfDays) => {
+    const days = [];
+    for (let i = 1; i <= numberOfDays; i++) {
+      days.push(format(addDays(currentDate, i), "dd-MM-yyyy"));
+    }
+    return days;
+  };
 
   const fetchData = (keyword) => {
     const fetchPromise = fetch(`/v1/booking/doctor/${keyword}`);
@@ -92,48 +108,15 @@ export default function Booking() {
     fetchPromise
       .then((response) => response.json())
       .then((data) => {
+        console.log("response:" + data.data);
         if (data.data != null) {
           setData(data.data);
         }
       });
   };
-  console.log(keyword);
-  console.log(data);
+  console.log("Key:" + keyword);
+  console.log("Data:" + data);
   console.log("Booking:" + booking);
-
-  //Xử lí ngày
-  // const getTime = () => {
-  //   var currentDate = new Date().toLocaleDateString();
-  //   const date = dayjs();
-  //   console.log("Date:" + date);
-
-  //   const unixDate = dayjs(date);
-  //   const object = {
-  //     day: unixDate.$D,
-  //     month: unixDate.$M + 1,
-  //     year: unixDate.$y,
-  //   };
-  //   // setTime(object);
-  //   console.log(unixDate);
-  //   console.log(object);
-  //   var array = [];
-  //   array.push(object);
-  //   for (var i = 1; i <= 6; i++) {
-  //     var obj;
-  //     obj = {
-  //       day: unixDate.$D + i,
-  //       month: unixDate.$M + 1,
-  //       year: unixDate.$y,
-  //     };
-  //     array.push(obj);
-  //   }
-  //   console.log(array);
-  //   setTime(array);
-  // };
-
-  // useEffect(() => {
-  //   getTime();
-  // }, []);
 
   //Xử lí sự kiện khi bấm lịch khám
   const useHandleSubmit = () => {
@@ -170,8 +153,9 @@ export default function Booking() {
         mode: "cors",
         body: JSON.stringify({
           doctorId: keyword,
-          patientId: "0",
-          date: listDay[value] + " " + valueBtn + ":00",
+          patientId: "1",
+          date: listDay[value],
+          time: selectedButton,
         }),
       });
 
@@ -180,69 +164,62 @@ export default function Booking() {
       if (result.status === "OK") {
         const returnData = result.data;
         console.log(returnData);
-        document.location.href = "/schedule";
+        // document.location.href = "/schedule";
+        navigate("/schedule");
       }
     };
 
     submit();
 
     console.log(listDay[value] + " " + valueBtn + ":00");
-
-    // empty dependency array means this effect will only run once (like componentDidMount in classes)
-    // }, []);
   };
+
+  //Lay data
 
   //Xử lí sự kiện chỉ chọn đc 1 button thời gian
   const handleButtonClick = (buttonValue) => {
-    console.log(data.bookings != []);
-    console.log(buttonValue);
-    if (data.bookings.length > 0) {
-      data.bookings.forEach((item) => {
-        // console.log("DateItem:" + item.date);
-        // console.log(
-        //   "DateItemConfig:" + listDay[value] + " " + buttonValue + ":00"
-        // );
+    // console.log(data.bookings != []);
+    // console.log(buttonValue);
+    // if (data.bookings.length > 0) {
+    //   data.bookings.forEach((item) => {
+    //     // console.log("DateItem:" + item.date);
+    //     // console.log(
+    //     //   "DateItemConfig:" + listDay[value] + " " + buttonValue + ":00"
+    //     // );
 
-        console.log(
-          "Check:" +
-            (listDay[value] + " " + "0" + buttonValue + ":00" == item.date + "")
-        );
-        // if (item.date == listDay[value] + " " + "0" + buttonValue + ":00") {
-        //   return false;
-        // } else {
-        //   return true;
-        // }
-        console.log("Length:" + buttonValue.length);
-        var check = false;
-        if (buttonValue.length != 5) {
-          buttonValue = "0" + buttonValue;
-          check = true;
-        }
-        if (listDay[value] + " " + buttonValue + ":00" == item.date + "") {
-          alert("Giờ đã có người đăng kí");
-          console.log("Đã có người đăng kí");
-          setSelectedButton(null);
-        } else {
-          if (check) {
-            buttonValue = buttonValue.substring(1, buttonValue.length);
-            console.log("Sub" + buttonValue.substring(1, buttonValue.length));
-          }
-          console.log("Button:" + buttonValue);
-          setSelectedButton(buttonValue);
-        }
-      });
-    } else {
-      console.log("k co book");
-      setSelectedButton(buttonValue);
-    }
-
-    // console.log("Itemc:" + check);
-    // if (check) {
-    //   alert("Giờ đã có người đăng kí");
-    //   console.log("Đã có người đăng kí");
+    //     console.log(
+    //       "Check:" +
+    //         (listDay[value] + " " + "0" + buttonValue + ":00" == item.date + "")
+    //     );
+    //     // if (item.date == listDay[value] + " " + "0" + buttonValue + ":00") {
+    //     //   return false;
+    //     // } else {
+    //     //   return true;
+    //     // }
+    //     console.log("Length:" + buttonValue.length);
+    //     var check = false;
+    //     if (buttonValue.length != 5) {
+    //       buttonValue = "0" + buttonValue;
+    //       check = true;
+    //     }
+    //     if (listDay[value] + " " + buttonValue + ":00" == item.date + "") {
+    //       alert("Giờ đã có người đăng kí");
+    //       console.log("Đã có người đăng kí");
+    //       setSelectedButton(null);
+    //     } else {
+    //       if (check) {
+    //         buttonValue = buttonValue.substring(1, buttonValue.length);
+    //         console.log("Sub" + buttonValue.substring(1, buttonValue.length));
+    //       }
+    //       console.log("Button:" + buttonValue);
+    //       setSelectedButton(buttonValue);
+    //     }
+    //   });
     // } else {
+    //   console.log("k co book");
     //   setSelectedButton(buttonValue);
     // }
+    setSelectedButton(buttonValue);
   };
 
   //Xử lí sự kiện khi đổi tab ngày
@@ -269,34 +246,33 @@ export default function Booking() {
     return (
       <div>
         <div className="time">
-          {
-            // booking != [] &&
-            //   booking != undefined &&
-            props.listHour.map((hour) =>
-              props.listmMnute.map((minute) => (
-                <button
-                  type="radio"
-                  name="time"
-                  className={`btn btn-outline-primary btn-time ${
-                    selectedButton === hour + ":" + minute ? "active" : ""
-                  } ${
-                    data.bookings ==
-                    props.date + " " + hour + ":" + minute + ":00"
-                      ? "disabled"
-                      : ""
-                  }
-                  
+          {props.listHour.map((hour) =>
+            props.listmMnute.map((minute) => (
+              <button
+                type="radio"
+                name="time"
+                className={`btn btn-outline-primary btn-time ${
+                  selectedButton === hour + ":" + minute ? "active " : ""
+                } 
+                   ${
+                     data.bookings != undefined &&
+                     data.bookings.map((value) => {
+                       if (value.time == hour + ":" + minute) {
+                         console.log(hour + ":" + minute + " disabled");
+                         return " disabled";
+                       }
+                     })
+                   }             
                  `}
-                  onClick={() => handleButtonClick(hour + ":" + minute)}
-                >
-                  {hour} : {minute} -{" "}
-                  {minute == "45"
-                    ? (parseInt(hour) + 1).toString() + " : 00"
-                    : hour + " : " + (parseInt(minute) + 15).toString()}
-                </button>
-              ))
-            )
-          }
+                onClick={() => handleButtonClick(hour + ":" + minute)}
+              >
+                {hour} : {minute} -{" "}
+                {minute == "45"
+                  ? (parseInt(hour) + 1).toString() + " : 00"
+                  : hour + " : " + (parseInt(minute) + 15).toString()}
+              </button>
+            ))
+          )}
         </div>
       </div>
     );
@@ -316,7 +292,7 @@ export default function Booking() {
           </Breadcrumbs>
         </div>
         <section className="container relative pd-10 bg-white border-radius-main pd-b-20">
-          {data.length != [] && (
+          {data != [] && (
             <div className="d-flex border-head ">
               <div className="image-doctor p-10">
                 <img
@@ -360,38 +336,50 @@ export default function Booking() {
                 allowScrollButtonsMobile
                 aria-label="scrollable force tabs example"
               >
+                {/* {listDay != [] &&
+                  listDay.map((day, index) => {
+                    <div key={index}>
+                      <Tab
+                        label={day}
+                        className="mr-l-r-12"
+                        {...a11yProps(index)}
+                      />
+                      ;
+                    </div>;
+                    console.log("Day:" + day);
+                  })} */}
                 <Tab
-                  label="Ngày 13-4-2024"
+                  label={listDay != [] ? "Ngày " + listDay[0] : ""}
                   className="mr-l-r-12"
                   {...a11yProps(0)}
                 />
                 <Tab
-                  label="Ngày 14-4-2024"
+                  label={listDay != [] ? "Ngày " + listDay[1] : ""}
                   className="mr-l-r-12"
                   {...a11yProps(1)}
                 />
                 <Tab
-                  label="Ngày 15-4-2024"
+                  label={listDay != [] ? "Ngày " + listDay[2] : ""}
                   className="mr-l-r-12"
                   {...a11yProps(2)}
                 />
                 <Tab
-                  label="Ngày 16-4-2024"
+                  label={listDay != [] ? "Ngày " + listDay[3] : ""}
                   className="mr-l-r-12"
                   {...a11yProps(3)}
                 />
                 <Tab
-                  label="Ngày 17-4-2024"
+                  label={listDay != [] ? "Ngày " + listDay[4] : ""}
                   className="mr-l-r-12"
                   {...a11yProps(4)}
                 />
                 <Tab
-                  label="Ngày 18-4-2024"
+                  label={listDay != [] ? "Ngày " + listDay[5] : ""}
                   className="mr-l-r-12"
                   {...a11yProps(5)}
                 />
                 <Tab
-                  label="Ngày 19-4-2024"
+                  label={listDay != [] ? "Ngày " + listDay[6] : ""}
                   className="mr-l-r-12"
                   {...a11yProps(6)}
                 />
