@@ -17,6 +17,10 @@ import dayjs from "dayjs";
 import { format, addDays, addMonths } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
+import Alert from "@mui/material/Alert";
+
+import axios from "axios";
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -57,25 +61,18 @@ export default function Booking() {
 
   const [data, setData] = useState([]);
 
-  const [time, setTime] = useState([]);
+  // const [time, setTime] = useState([]);
 
-  const [booking, setBooking] = useState([]);
+  // const [booking, setBooking] = useState([]);
+  const [isError, setIsError] = useState(false);
 
   const [listDay, setListDay] = useState([]);
 
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const navigate = useNavigate();
+  const [dateChoose, setDateChoose] = useState(new Date());
 
-  // const listDay = [
-  //   "2024-04-13",
-  //   "2024-04-14",
-  //   "2024-04-15",
-  //   "2024-04-16",
-  //   "2024-04-17",
-  //   "2024-04-18",
-  //   "2024-04-19",
-  // ];
+  const navigate = useNavigate();
 
   const minute = ["00", "15", "30", "45"];
   const hourMoning = ["7", "8", "9", "10"];
@@ -89,11 +86,11 @@ export default function Booking() {
   //Gọi API lấy dữ liệu
 
   useEffect(() => {
-    fetchData(keyword);
     setListDay(getNextDays(7));
-    // setBooking(data.bookings);
+    fetchData(keyword);
   }, []);
 
+  //Phương thức lấy 7 ngày tiếp theo
   const getNextDays = (numberOfDays) => {
     const days = [];
     for (let i = 1; i <= numberOfDays; i++) {
@@ -102,23 +99,34 @@ export default function Booking() {
     return days;
   };
 
-  const fetchData = (keyword) => {
-    const fetchPromise = fetch(`/v1/booking/doctor/${keyword}`);
+  // const fetchData = (keyword) => {
+  //   const fetchPromise = fetch(
+  //     `/v1/booking/doctor/${keyword}?date=${getNextDays(7)[value]}`
+  //   );
 
-    fetchPromise
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("response:" + data.data);
-        if (data.data != null) {
-          setData(data.data);
-        }
-      });
+  //   fetchPromise
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log("response:" + data.data);
+  //       if (data.data != null) {
+  //         setData(data.data);
+  //       }
+  //     });
+  // };
+
+  //Phương thức lấy dữ liệu
+  const fetchData = async (keyword) => {
+    const response = await axios.get(`/v1/booking/doctor/${keyword}`);
+
+    if (response.status == 200) {
+      if (response.data.data != null) {
+        setData(response.data.data);
+        console.log("change data");
+      }
+    }
   };
-  console.log("Key:" + keyword);
-  console.log("Data:" + data);
-  console.log("Booking:" + booking);
 
-  //Xử lí sự kiện khi bấm lịch khám
+  //Xử lí sự kiện khi bấm đặt lịch khám
   const useHandleSubmit = () => {
     let valueBtn = selectedButton;
     // useEffect(() => {
@@ -166,6 +174,9 @@ export default function Booking() {
         console.log(returnData);
         // document.location.href = "/schedule";
         navigate("/schedule");
+      } else if ((result.status = "failed")) {
+        setIsError(true);
+        setSelectedButton(null);
       }
     };
 
@@ -220,17 +231,17 @@ export default function Booking() {
     //   setSelectedButton(buttonValue);
     // }
     setSelectedButton(buttonValue);
+    setIsError(false);
   };
 
   //Xử lí sự kiện khi đổi tab ngày
   const handleChange = (event, newValue) => {
     setValue(newValue);
     setSelectedButton(null);
-  };
-  console.log("Value:" + listDay[value]);
 
-  console.log(selectedButton);
-  console.log(typeof selectedButton);
+    setDateChoose(addDays(new Date(), newValue));
+    console.log(format(addDays(new Date(), newValue), "dd-MM-yyyy"));
+  };
 
   useEffect(() => {
     const handlSRoll = () => {
@@ -251,18 +262,21 @@ export default function Booking() {
               <button
                 type="radio"
                 name="time"
-                className={`btn btn-outline-primary btn-time ${
-                  selectedButton === hour + ":" + minute ? "active " : ""
-                } 
-                   ${
-                     data.bookings != undefined &&
-                     data.bookings.map((value) => {
-                       if (value.time == hour + ":" + minute) {
-                         console.log(hour + ":" + minute + " disabled");
-                         return " disabled";
-                       }
-                     })
-                   }             
+                className={`btn btn-outline-primary btn-time
+                 ${
+                   data.bookings != undefined &&
+                   data.bookings.map((value) => {
+                     if (
+                       value.time == hour + ":" + minute &&
+                       format(dateChoose, "dd-MM-yyyy") == value.date
+                     ) {
+                       console.log(hour + ":" + minute + " disabled ");
+                       return " disabled ";
+                     }
+                   })
+                 } 
+                ${selectedButton === hour + ":" + minute ? " active " : ""} 
+                              
                  `}
                 onClick={() => handleButtonClick(hour + ":" + minute)}
               >
@@ -281,6 +295,13 @@ export default function Booking() {
   return (
     <div>
       <Header></Header>
+      {isError && (
+        <div className={"status"}>
+          <Alert severity="error">
+            Có lỗi xảy ra vui lòng chọn thời gian khác.
+          </Alert>
+        </div>
+      )}
 
       <div className="bg-slate-100 pd-20">
         <div role="presentation" className="container mb-3">
@@ -574,15 +595,7 @@ export default function Booking() {
             style={{ padding: "30px" }}
           >
             <h1 className="text-lg font-semibold"> Giới thiệu</h1>
-            <p>
-              BS. CK1. Trần Văn A có chuyên môn giỏi, tận tâm và giàu kinh
-              nghiệm, với tốt nghiệp loại giỏi lớp chuyên khoa I chuyên ngành
-              Nhi khoa Đại học Y Dược Huế và có kinh nghiệm 10 năm làm việc tại
-              khoa nhi tổng hợp Bệnh viện Phụ sản - Nhi Đà Nẵng. Bác sĩ A còn
-              được đào tạo và làm việc tại Bệnh viện Nhi Đồng 2 TP Hồ Chí Minh.
-              Hiện là Phó trưởng khoa Nhi Tổng Hợp bệnh viện phụ sản nhi Đà
-              Nẵng, ủy viên BCH chi hội ung thư nhi Việt Nam
-            </p>
+            <p>{data.descreption}</p>
           </div>
         </section>
       </div>
