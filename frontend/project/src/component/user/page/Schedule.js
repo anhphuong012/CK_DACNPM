@@ -12,6 +12,8 @@ import Paper from "@mui/material/Paper";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+import { format, addDays, addMonths } from "date-fns";
+
 import "../css/schedule.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -62,6 +64,17 @@ export default function Schedule() {
 
   console.log(data);
 
+  const convertData = (date) => {
+    var convert = date.split("-");
+
+    var myDate = new Date(
+      parseInt(convert[2]),
+      parseInt(convert[1]),
+      parseInt(convert[0])
+    );
+    return format(addDays(myDate, 1), "dd-MM-yyyy");
+  };
+
   return (
     <div>
       <Header></Header>
@@ -102,7 +115,7 @@ export default function Schedule() {
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {item.date}
+                        {convertData(item.date)} {"  " + item.time} {}
                       </TableCell>
                       {item.doctor != undefined && item.doctor != null && (
                         <TableCell align="left">

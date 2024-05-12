@@ -43,22 +43,35 @@ public class BookingController {
 		Doctor doctor = doctorRepository.findById(bookingDTO.getDoctorId()).get();
 		Patient patient = patientRepository.findById(bookingDTO.getPatientId()).get();
 		
-		Booking booking = new Booking();
-		booking.setDate(bookingDTO.getDate());
-		booking.setDoctor(doctor);
-		booking.setPatient(patient);
-		booking.setTime(bookingDTO.getTime());
-		booking.setStatus(1);
+		Booking bookingModel = bookingRepository.findByDateAndTimeAndDoctor(bookingDTO.getDate(), bookingDTO.getTime(),doctor);
 		
-		if(bookingRepository.save(booking)!=null) {
-			return ResponseEntity.status(HttpStatus.OK).body(
-	    			new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(booking))
-	    			);	
+		System.out.println(bookingModel);
+		
+		if(bookingModel ==  null) {
+			Booking booking = new Booking();
+			booking.setDate(bookingDTO.getDate());
+			booking.setDoctor(doctor);
+			booking.setPatient(patient);
+			booking.setTime(bookingDTO.getTime());
+			booking.setStatus(1);
+			
+			if(bookingRepository.save(booking)!=null) {
+				return ResponseEntity.status(HttpStatus.OK).body(
+		    			new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(booking))
+		    			);	
+			}else {
+				return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
+		    			new ReposeOject("failed", " Error", null)
+		    			);
+			}
+			
 		}else {
 			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
 	    			new ReposeOject("failed", " Error", null)
 	    			);
 		}
+		
+	
 		
 		
 		
@@ -113,7 +126,8 @@ public class BookingController {
 	public @ResponseBody ResponseEntity<ReposeOject> getBookingByPatientId(@PathVariable("id")long patientId){
 		Patient patient = patientRepository.findById(patientId).get();
 		
-		List<Booking> bookings = bookingRepository.findByPatient(patient);
+		List<Booking> bookings = bookingRepository.findByPatientOrderByIdDesc(patient);
+		
 		
 		List<BookingReturnDTO> bookingResult = new ArrayList<>();
 		
