@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface SheduleRepository extends JpaRepository<Shedule, Long> {
-    List<Shedule> findByDoctorIdAndDateAndFromTimeGreaterThanEqualAndToTimeLessThanEqual(long doctorId, LocalDate date, LocalTime fromTime, LocalTime toTime);
+    Shedule findByDoctorIdAndDateAndFromTimeGreaterThanEqualAndToTimeLessThanEqual(long doctorId, LocalDate date, LocalTime fromTime, LocalTime toTime);
 }
