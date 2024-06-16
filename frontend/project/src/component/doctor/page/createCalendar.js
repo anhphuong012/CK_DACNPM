@@ -165,7 +165,7 @@ export default function Booking() {
         },
         mode: "cors",
         body: JSON.stringify({
-          doctorId: 79822,
+          doctorId: 3,
           date: listDay[value],
           time: selectedButtons,
         }),
