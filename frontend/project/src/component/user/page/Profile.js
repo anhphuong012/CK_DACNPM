@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/profile.css";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Profile() {
   const [male, setMale] = useState(true);
@@ -17,19 +18,23 @@ export default function Profile() {
   const [age, setAge] = useState("");
 
   const fetchData = async (keyword) => {
-    const response = await axios.get(`/v1/patients/patient/${keyword}`);
+    try {
+      const user = JSON.parse(sessionStorage.getItem("user"));
 
-    if (response.status == 200) {
-      if (response.data.data != null) {
-        setData(response.data.data);
+      const response = await axios.get(`/v1/patients/patient/${user.id}`);
 
-        setName(response.data.data.fullName);
-        setEmail(response.data.data.email);
-        setPhone(response.data.data.phoneNumber);
-        setAge(response.data.data.age);
-        console.log("change data");
+      if (response.status == 200) {
+        if (response.data.data != null) {
+          setData(response.data.data);
+
+          setName(response.data.data.fullName);
+          setEmail(response.data.data.email);
+          setPhone(response.data.data.phoneNumber);
+          setAge(response.data.data.age);
+          console.log("change data");
+        }
       }
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -51,10 +56,18 @@ export default function Profile() {
           age: age,
         }),
       };
-      const response = await fetch(`/v1/patients/patient/${1}`, requestOptions);
-      const data = await response.json();
-      console.log(data);
-      setData(data.data);
+
+      try {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+
+        const response = await fetch(
+          `/v1/patients/patient/${user.id}`,
+          requestOptions
+        );
+        const data = await response.json();
+        console.log(data);
+        setData(data.data);
+      } catch (error) {}
     }
     updatePost();
   };

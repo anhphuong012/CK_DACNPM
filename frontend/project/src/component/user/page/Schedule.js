@@ -50,7 +50,8 @@ export default function Schedule() {
   }, []);
 
   const fetchData = (id) => {
-    const fetchPromise = fetch(`/v1/booking/patient/${id}`);
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    const fetchPromise = fetch(`/v1/booking/patient/${user.id}`);
 
     fetchPromise
       .then((response) => response.json())

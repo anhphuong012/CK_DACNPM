@@ -135,52 +135,58 @@ export default function Booking() {
       valueBtn = "0" + selectedButton;
     }
     console.log("Length Values:" + selectedButton.length);
-    const submit = async () => {
-      // const requestOptions = {
-      //   method: "POST",
-      //   headers: {
-      //     Accept: "application/json",
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     doctorId: "1",
-      //     patientId: "0",
-      //     date: listDay[value] + selectedButton + ":00",
-      //   }),
-      // };
-      // fetch("/v1/booking/add", requestOptions)
-      //   .then((response) => response.json())
-      //   .then((data) => console.log(data));
+    if (sessionStorage.getItem("user") != null) {
+      const user = JSON.parse(sessionStorage.getItem("user"));
+      const submit = async () => {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        // const requestOptions = {
+        //   method: "POST",
+        //   headers: {
+        //     Accept: "application/json",
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     doctorId: "1",
+        //     patientId: "0",
+        //     date: listDay[value] + selectedButton + ":00",
+        //   }),
+        // };
+        // fetch("/v1/booking/add", requestOptions)
+        //   .then((response) => response.json())
+        //   .then((data) => console.log(data));
 
-      const response = await fetch("/v1/booking/add", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        mode: "cors",
-        body: JSON.stringify({
-          doctorId: keyword,
-          patientId: "1",
-          date: listDay[value],
-          time: selectedButton,
-        }),
-      });
+        const response = await fetch("/v1/booking/add", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          mode: "cors",
+          body: JSON.stringify({
+            doctorId: keyword,
+            patientId: "1",
+            date: listDay[value],
+            time: selectedButton,
+          }),
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (result.status === "OK") {
-        const returnData = result.data;
-        console.log(returnData);
-        // document.location.href = "/schedule";
-        navigate("/schedule");
-      } else if ((result.status = "failed")) {
-        setIsError(true);
-        setSelectedButton(null);
-      }
-    };
+        if (result.status === "OK") {
+          const returnData = result.data;
+          console.log(returnData);
+          // document.location.href = "/schedule";
+          navigate("/schedule");
+        } else if ((result.status = "failed")) {
+          setIsError(true);
+          setSelectedButton(null);
+        }
+      };
 
-    submit();
+      submit();
+    } else {
+      navigate("/login");
+    }
 
     console.log(listDay[value] + " " + valueBtn + ":00");
   };

@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -39,6 +40,10 @@ public class Doctor {
 	
 	@OneToMany(mappedBy = "doctor")
 	private List<Booking> bookings;
+	
+	
+	@OneToOne(mappedBy = "doctor")
+	private Account account;
 	
 	
 	public Doctor() {
@@ -115,7 +120,7 @@ public class Doctor {
 		this.placeOfwork = placeOfwork;
 	}
 
-
+//
 	public Long getId() {
 		return id;
 	}

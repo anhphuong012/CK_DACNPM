@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState, Component } from "react";
+import React, { useState, Component, useEffect } from "react";
 import "../css/header.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Box from "@mui/material/Box";
@@ -17,7 +17,7 @@ import logoPan from "../img/Logo_PanBee_png.png";
 
 import Tooltip from "@mui/material/Tooltip";
 export default function Headers() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -27,6 +27,14 @@ export default function Headers() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    if (sessionStorage.getItem("user") != null) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, []);
 
   const handleForward = (url) => {
     setAnchorEl(null);
@@ -116,7 +124,7 @@ export default function Headers() {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem onClick={() => handleForward("/create-calendar")}>
+                <MenuItem onClick={() => handleForward("/profile")}>
                   <ListItemIcon>
                     <AccountBoxIcon></AccountBoxIcon>
                   </ListItemIcon>{" "}

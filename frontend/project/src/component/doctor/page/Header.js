@@ -116,7 +116,7 @@ export default function Headers() {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem onClick={() => handleForward("/create-calendar")}>
+                <MenuItem onClick={() => handleForward("/profile-doctors")}>
                   <ListItemIcon>
                     <AccountBoxIcon></AccountBoxIcon>
                   </ListItemIcon>{" "}
