@@ -4,11 +4,45 @@ import Login from "../img/Login.png";
 import "../css/login.css";
 import Footer from "./Footer";
 import { Link, useNavigate } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 import Login_pan from "../img/login_pan.png";
+import "axios";
 export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+
+  const login = async () => {
+    await axios({
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "/v1/account/login",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({
+        username: phone,
+        password: password,
+      }),
+    }).then(function (response) {
+      console.log(response);
+      if (response.status == 200) {
+        if (response.data.data.role == "user") {
+          var user = response.data.data.patient;
+          sessionStorage.setItem("user", JSON.stringify(user));
+          document.location.href = "/";
+        } else {
+          var user = response.data.data.doctor;
+          sessionStorage.setItem("user", JSON.stringify(user));
+          document.location.href = "/profile-doctors";
+        }
+      } else if (response.status == 424) {
+        toast.error("Sai tài khoản hoặc mật khẩu");
+      } else {
+        toast.error("Đã gặp lỗi");
+      }
+    });
+  };
 
   return (
     <div>
@@ -72,7 +106,7 @@ export default function LoginPage() {
                   </div>
                 </div>
                 <div className="wrap-btn-login">
-                  <button className="btn btn-primary btn-login">
+                  <button className="btn btn-primary btn-login" onClick={login}>
                     Đăng nhập
                   </button>
                 </div>
@@ -85,6 +119,7 @@ export default function LoginPage() {
                 </div>
               </div>
             </div>
+            <ToastContainer />
           </div>
         </section>
       </div>

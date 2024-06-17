@@ -4,12 +4,16 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
-public class Patient {
+public class Patient  {
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO, generator="native")
 	private Long id;
 	@Column(name="full_name")
 	private String fullName;
@@ -25,6 +29,9 @@ public class Patient {
 	
 	@OneToMany(mappedBy = "patient")
 	private List<Booking> bookings;
+	
+	@OneToOne(mappedBy = "patient")
+	private Account account;
 	
 	public Patient() {
 		

@@ -5,15 +5,19 @@ import "../css/register.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function Register() {
   const [sex, setSex] = useState("male");
   const [checkPass, setCheckPass] = useState(true);
   const [checkPhone, setCheckPhone] = useState(true);
 
+  const [fullName, setFullName] = useState("");
   const [repass, setRepass] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [age, setAge] = useState("");
 
   console.log("Pass:" + password);
   console.log("Repass:" + repass);
@@ -32,6 +36,35 @@ export default function Register() {
 
   const radioChange = (event) => {
     setSex(event.target.value);
+  };
+
+  const register = async () => {
+    await axios({
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "/v1/account",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({
+        username: phone,
+        password: password,
+        fullName: fullName,
+        phoneNumber: phone,
+        sex: sex,
+        email: email,
+        age: age,
+      }),
+    }).then(function (response) {
+      console.log(response);
+      if (response.status == 201) {
+        if (response.data.data.role == "user") {
+          var user = response.data.data.patient;
+          sessionStorage.setItem("user", JSON.stringify(user));
+          document.location.href = "/";
+        }
+      }
+    });
   };
   return (
     <div>
@@ -65,6 +98,8 @@ export default function Register() {
                           id="fullName"
                           placeholder="Họ và tên"
                           required
+                          value={fullName}
+                          onChange={(event) => setFullName(event.target.value)}
                         />
                       </div>
                       <div class="col-12">
@@ -98,6 +133,8 @@ export default function Register() {
                           name="email"
                           id="email"
                           placeholder="name@example.com"
+                          value={email}
+                          onChange={(event) => setEmail(event.target.value)}
                           required
                         />
                       </div>
@@ -111,6 +148,8 @@ export default function Register() {
                           class="form-control"
                           name="age"
                           id="age"
+                          value={age}
+                          onChange={(event) => setAge(event.target.value)}
                           required
                         />
                       </div>
@@ -222,7 +261,13 @@ export default function Register() {
                       </div> */}
                       <div class="col-12">
                         <div class="d-grid">
-                          <button class="btn btn-lg btn-primary" type="submit">
+                          <button
+                            class={`btn btn-lg btn-primary ${
+                              checkPass && checkPhone ? "" : "disabled"
+                            }`}
+                            type="submit"
+                            onClick={register}
+                          >
                             Đăng kí
                           </button>
                         </div>
