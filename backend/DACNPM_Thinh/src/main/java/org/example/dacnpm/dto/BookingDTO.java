@@ -3,14 +3,11 @@ package org.example.dacnpm.dto;
 import java.sql.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
 
 
-
-
+@Getter
 public class BookingDTO {
-
-
-	
 
 	private Long doctorId;
 	
@@ -27,50 +24,22 @@ public class BookingDTO {
 	}
 
 
-
-	public Long getDoctorId() {
-		return doctorId;
-	}
-
-
-
-	public void setDoctorId(Long doctorId) {
+    public void setDoctorId(Long doctorId) {
 		this.doctorId = doctorId;
 	}
 
 
-
-	public Long getPatientId() {
-		return patientId;
-	}
-
-
-
-	public void setPatientId(Long patientIds) {
+    public void setPatientId(Long patientIds) {
 		this.patientId = patientIds;
 	}
 
 
-
-	public Date getDate() {
-		return date;
-	}
-
-
-
-	public void setDate(Date date) {
+    public void setDate(Date date) {
 		this.date = date;
 	}
 
 
-
-	public String getTime() {
-		return time;
-	}
-
-
-
-	public void setTime(String time) {
+    public void setTime(String time) {
 		this.time = time;
 	}
 

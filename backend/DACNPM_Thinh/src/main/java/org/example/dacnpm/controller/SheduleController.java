@@ -1,15 +1,16 @@
 package org.example.dacnpm.controller;
 
-import org.example.dacnpm.model.ReposeOject;
-import org.example.dacnpm.model.Shedule;
+import org.example.dacnpm.dto.CaledarDTO;
+import org.example.dacnpm.model.*;
+import org.example.dacnpm.repositories.DoctorRepository;
 import org.example.dacnpm.repositories.SheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,8 @@ public class SheduleController {
 
     @Autowired
     private SheduleRepository sheduleRepository;
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     @GetMapping("")
     List<Shedule> getAllShedulesInDoctor() {
@@ -37,16 +40,27 @@ public class SheduleController {
 /*
 Add a doctor's work schedule – The work schedule is the time the doctor is free to be able to receive patients
  */
-    @PostMapping("")
-    ResponseEntity<ReposeOject> insertSheduleInDoctor(@RequestBody Shedule shedule) {
-        List<Shedule> findAllShedules = sheduleRepository.findByDoctorIdAndDateAndFromTimeGreaterThanEqualAndToTimeLessThanEqual(shedule.getDoctorId(), shedule.getDate(), shedule.getFromTime(), shedule.getToTime());
-        if (findAllShedules.size() > 0){
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
-                    new ReposeOject( "False", "Can not insert shedule because shedule already exists", "")
-            );
+    @PostMapping("/add")
+    public @ResponseBody ResponseEntity<ReposeOject> insertSheduleInDoctor(@RequestBody CaledarDTO caledarDTO) {
+        String date = String.valueOf(caledarDTO.getDate());
+        for(int i=0; i< caledarDTO.getTime().length;i++){
+            String time = String.valueOf(caledarDTO.getTime()[i])+":00";
+            LocalTime parsedTime = LocalTime.parse(time);
+            LocalTime newTime = parsedTime.plus(1, ChronoUnit.HOURS);
+            Shedule shedule = (Shedule) sheduleRepository.findByDoctorIdAndDateAndFromTimeGreaterThanEqualAndToTimeLessThanEqual(caledarDTO.getDoctorId(), LocalDate.parse(date), LocalTime.parse(time), LocalTime.parse("17:00:00"));
+            // nếu tìm lịch có tồn tại thì chuyển trạng thái về false nghĩa là lịch bận
+            // ngược lại thì tạo lịch mới với trạng thái là true nghĩa là lịch trống
+            if (shedule != null){
+                shedule.setStatus(false);
+                sheduleRepository.save(shedule);
+            }
+            else{
+                Shedule shedule1 = new Shedule(caledarDTO.getDoctorId(),LocalDate.parse(date), parsedTime , newTime, true);
+                sheduleRepository.save(shedule1);
+            }
         }
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ReposeOject("ok", "success", sheduleRepository.save(shedule))
+                new ReposeOject("OK", " Successful"," shedule")
         );
     }
 

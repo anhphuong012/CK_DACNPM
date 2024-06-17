@@ -7,7 +7,9 @@ import org.example.dacnpm.model.Doctor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface DoctorRepository  extends CrudRepository<Doctor, Long> {
 	List<Doctor> findByDepartment(Department department);
 	

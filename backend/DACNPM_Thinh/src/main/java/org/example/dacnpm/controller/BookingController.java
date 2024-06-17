@@ -9,10 +9,7 @@ import org.example.dacnpm.dto.BookingDTO;
 import org.example.dacnpm.dto.BookingReturnDTO;
 import org.example.dacnpm.dto.DoctorDTO;
 import org.example.dacnpm.dto.PatientDTO;
-import org.example.dacnpm.model.Booking;
-import org.example.dacnpm.model.Doctor;
-import org.example.dacnpm.model.Patient;
-import org.example.dacnpm.model.ReposeOject;
+import org.example.dacnpm.model.*;
 import org.example.dacnpm.repositories.BookingRepository;
 import org.example.dacnpm.repositories.DoctorRepository;
 import org.example.dacnpm.repositories.PatientRepository;
@@ -42,7 +39,9 @@ public class BookingController {
 	 public @ResponseBody ResponseEntity<ReposeOject> insertBooking(@RequestBody BookingDTO bookingDTO){
 		Doctor doctor = doctorRepository.findById(bookingDTO.getDoctorId()).get();
 		Patient patient = patientRepository.findById(bookingDTO.getPatientId()).get();
-		
+
+
+		System.out.println(bookingDTO.getTime());
 		Booking bookingModel = bookingRepository.findByDateAndTimeAndDoctor(bookingDTO.getDate(), bookingDTO.getTime(),doctor);
 		
 		System.out.println(bookingModel);
@@ -55,7 +54,13 @@ public class BookingController {
 			booking.setTime(bookingDTO.getTime());
 			booking.setStatus(1);
 			
-			if(bookingRepository.save(booking)!=null) {
+			if(true) {
+				String text = "Đặt lich kham benh thanh cong \n" +
+							"kinh gui: "+booking.getPatient() +
+						"\nma so: "+booking.getId() +
+						"\nthoi gian: " + booking.getTime() +" ngay " + booking.getDate()+
+						"\nbac si: " + booking.getDoctor();
+				SendEmail.sendMail("huuthinh19593@gmail.com","Thông Bao Dat Lich Kham Benh", text);
 				return ResponseEntity.status(HttpStatus.OK).body(
 		    			new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(booking))
 		    			);	
