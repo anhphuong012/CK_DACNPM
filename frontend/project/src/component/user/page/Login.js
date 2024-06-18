@@ -5,12 +5,14 @@ import "../css/login.css";
 import Footer from "./Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import Login_pan from "../img/login_pan.png";
 import "axios";
 export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const login = async () => {
     await axios({
@@ -36,7 +38,7 @@ export default function LoginPage() {
           sessionStorage.setItem("user", JSON.stringify(user));
           document.location.href = "/profile-doctors";
         }
-      } else if (response.status == 424) {
+      } else if (response.status == 204) {
         toast.error("Sai tài khoản hoặc mật khẩu");
       } else {
         toast.error("Đã gặp lỗi");
@@ -119,7 +121,7 @@ export default function LoginPage() {
                 </div>
               </div>
             </div>
-            <ToastContainer />
+            <ToastContainer position="bottom-right" />
           </div>
         </section>
       </div>

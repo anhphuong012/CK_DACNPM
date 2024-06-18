@@ -113,10 +113,24 @@ export default function Booking() {
   //       }
   //     });
   // };
-
+  // console.log(listDay);
   //Phương thức lấy dữ liệu
   const fetchData = async (keyword) => {
-    const response = await axios.get(`/v1/booking/doctor/${keyword}`);
+    const list7Day = getNextDays(7);
+    console.log(list7Day);
+    var stringDate = "";
+    list7Day.forEach((element, index) => {
+      if (index == list7Day.length - 1) {
+        stringDate += element;
+      } else {
+        stringDate += element + ",";
+      }
+    });
+
+    console.log("String:" + stringDate);
+    const response = await axios.get(
+      `/v1/booking/doctor/${keyword}?date=${stringDate}`
+    );
 
     if (response.status == 200) {
       if (response.data.data != null) {
@@ -164,7 +178,7 @@ export default function Booking() {
           mode: "cors",
           body: JSON.stringify({
             doctorId: keyword,
-            patientId: "1",
+            patientId: user.id,
             date: listDay[value],
             time: selectedButton,
           }),
