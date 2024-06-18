@@ -44,7 +44,7 @@ public class BookingController {
 		System.out.println(bookingDTO.getTime());
 		Booking bookingModel = bookingRepository.findByDateAndTimeAndDoctor(bookingDTO.getDate(), bookingDTO.getTime(),doctor);
 		
-		System.out.println(bookingModel);
+		System.out.println(bookingDTO.getDate());
 		
 		if(bookingModel ==  null) {
 			Booking booking = new Booking();
@@ -53,22 +53,27 @@ public class BookingController {
 			booking.setPatient(patient);
 			booking.setTime(bookingDTO.getTime());
 			booking.setStatus(1);
+			Booking save = bookingRepository.save(booking);
 			
-			if(true) {
+			if(save != null) {
 				String text = "Đặt lich kham benh thanh cong \n" +
 							"kinh gui: "+booking.getPatient() +
 						"\nma so: "+booking.getId() +
 						"\nthoi gian: " + booking.getTime() +" ngay " + booking.getDate()+
 						"\nbac si: " + booking.getDoctor();
-				SendEmail.sendMail("huuthinh19593@gmail.com","Thông Bao Dat Lich Kham Benh", text);
+				SendEmail.sendMail(booking.getPatient().getEmail(),"Thông Bao Dat Lich Kham Benh", text);
 				return ResponseEntity.status(HttpStatus.OK).body(
-		    			new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(booking))
+		    			new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(save))
 		    			);	
 			}else {
 				return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
 		    			new ReposeOject("failed", " Error", null)
 		    			);
 			}
+			
+//			return ResponseEntity.status(HttpStatus.OK).body(
+//	    			new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(save))
+//	    			);
 			
 		}else {
 			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
@@ -83,7 +88,7 @@ public class BookingController {
 	}
 	
 	@GetMapping("/doctor/{id}")
-	public @ResponseBody ResponseEntity<ReposeOject> getBookingByDoctorId(@PathVariable("id")long doctorId,@RequestParam(value = "date",required = false) String date){
+	public @ResponseBody ResponseEntity<ReposeOject> getBookingByDoctorId(@PathVariable("id")long doctorId,@RequestParam(value = "date",required = false) List<String> date){
 		Doctor doctor = doctorRepository.findById(doctorId).get();
 		
 		List<Booking> bookings = bookingRepository.findByDoctor(doctor);
@@ -101,8 +106,19 @@ public class BookingController {
 				dateOut = booking.getDate();
 				
 				
-				if(formatter.format(dateOut).equals(date)) {
-					bookingOfDate.add(booking);
+//				if(formatter.format(dateOut).equals(date)) {
+//					bookingOfDate.add(booking);
+//				}
+//				if(date.contains(formatter.format(dateOut))) {
+//					bookingOfDate.add(booking);
+//				}
+				for (String temp : date) {
+					System.out.println("Temp:" + temp);
+					if(formatter.format(dateOut).equals(temp)) {
+						bookingOfDate.add(booking);
+						break;
+					}
+					
 				}
 			}
 			

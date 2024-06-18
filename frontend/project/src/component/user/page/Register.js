@@ -5,6 +5,8 @@ import "../css/register.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 export default function Register() {
@@ -63,6 +65,8 @@ export default function Register() {
           sessionStorage.setItem("user", JSON.stringify(user));
           document.location.href = "/";
         }
+      } else if (response.status == 204) {
+        toast.error("Số điện thoại đã có trên hệ thống!");
       }
     });
   };
@@ -340,6 +344,7 @@ export default function Register() {
               </div>
             </div>
           </div>
+          <ToastContainer position="bottom-right" />
         </div>
       </section>
       <Footer></Footer>

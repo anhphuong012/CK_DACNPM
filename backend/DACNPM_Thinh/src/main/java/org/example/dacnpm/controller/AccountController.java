@@ -26,7 +26,7 @@ public class AccountController {
 		AccountUserResponse accountUserResponse = accountService.register(register);
 		
 		if(accountUserResponse == null) {
-			return ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).body(
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
 	    			new ReposeOject("failed", " failed",null)
 	    			);
 		}else {
@@ -41,7 +41,7 @@ public class AccountController {
 		Object obj = accountService.login(login.getUsername(), login.getPassword());
 		
 		if(obj == null) {
-			return ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).body(
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
 	    			new ReposeOject("failed", " failed",null));
 		}else {
 			return ResponseEntity.status(HttpStatus.OK).body(

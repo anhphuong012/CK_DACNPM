@@ -5,7 +5,9 @@ import Footer from "./Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/profile.css";
 import axios from "axios";
+
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Profile() {
   const [male, setMale] = useState(true);
@@ -67,6 +69,7 @@ export default function Profile() {
         const data = await response.json();
         console.log(data);
         setData(data.data);
+        toast.success("Thay đổi thành công!");
       } catch (error) {}
     }
     updatePost();
@@ -215,6 +218,7 @@ export default function Profile() {
                     </div>
                   </div>
                 </div>
+                <ToastContainer position="bottom-right" />
               </div>
             </div>
           )}

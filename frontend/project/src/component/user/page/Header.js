@@ -137,7 +137,13 @@ export default function Headers() {
                   Lịch đã đặt
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={handleClose}>
+                <MenuItem
+                  onClick={() => {
+                    setAnchorEl(null);
+                    sessionStorage.clear();
+                    window.location.href = "/";
+                  }}
+                >
                   <ListItemIcon>
                     <LogoutIcon></LogoutIcon>
                   </ListItemIcon>
