@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.example.dacnpm.Service.IBookingService;
 import org.example.dacnpm.dto.BookingDTO;
 import org.example.dacnpm.dto.BookingReturnDTO;
 import org.example.dacnpm.dto.DoctorDTO;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +36,9 @@ public class BookingController {
 	private PatientRepository patientRepository;
 	@Autowired
 	private DoctorRepository doctorRepository;
+	
+	@Autowired
+	private IBookingService bookingService;
 	
 	@PostMapping("/add")
 	 public @ResponseBody ResponseEntity<ReposeOject> insertBooking(@RequestBody BookingDTO bookingDTO){
@@ -171,6 +176,9 @@ public class BookingController {
 
 		
 	}
-
+	@PutMapping("/schedule/cancel/{id}")
+	public ResponseEntity<Object> cancelSchedule(@PathVariable("id") long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(bookingService.cancelBooking(id));
+	}
 
 }
