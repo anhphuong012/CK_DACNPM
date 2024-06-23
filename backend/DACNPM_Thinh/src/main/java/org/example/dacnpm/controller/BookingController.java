@@ -2,6 +2,7 @@ package org.example.dacnpm.controller;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,8 +153,9 @@ public class BookingController {
 	public @ResponseBody ResponseEntity<ReposeOject> getBookingByPatientId(@PathVariable("id")long patientId){
 		Patient patient = patientRepository.findById(patientId).get();
 		
-		List<Booking> bookings = bookingRepository.findByPatientOrderByIdDesc(patient);
-		
+//		List<Booking> bookings = bookingRepository.findByPatientOrderByIdDesc(patient);
+		Date now = Date.valueOf(LocalDate.now());
+		List<Booking> bookings = bookingRepository.findBookingAvailable(patientId, now);
 		
 		List<BookingReturnDTO> bookingResult = new ArrayList<>();
 		
@@ -176,9 +178,14 @@ public class BookingController {
 
 		
 	}
-	@PutMapping("/schedule/cancel/{id}")
-	public ResponseEntity<Object> cancelSchedule(@PathVariable("id") long id) {
+	@PutMapping("/cancel/{id}")
+	public ResponseEntity<ReposeOject> cancelBooking(@PathVariable("id") long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(bookingService.cancelBooking(id));
+	}
+	
+	@GetMapping("/patient/done/{pId}")
+	public ResponseEntity<ReposeOject> getBookingHaveGone(@PathVariable("pId") long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(bookingService.findBookingHaveGone(id));
 	}
 
 }
