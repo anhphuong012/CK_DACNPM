@@ -16,7 +16,7 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Booking {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator="native")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	@ManyToOne

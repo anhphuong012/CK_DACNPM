@@ -2,8 +2,8 @@ package org.example.dacnpm.dto;
 
 import java.util.List;
 
-import org.example.dacnpm.model.Booking;
 import org.example.dacnpm.model.Doctor;
+import org.springframework.beans.factory.annotation.Value;
 
 public class DoctorDTO {
 
@@ -15,11 +15,13 @@ public class DoctorDTO {
 	private String descreption;
 	private String department;
 	private String placeOfwork;
-	
+
 	private List<BookingReturnDTO> bookings;
-	
+
+
+
 	public DoctorDTO() {
-		
+
 	}
 
 	public DoctorDTO(Long id, String fullName, String avatar, String email, String degree, String descreption,
@@ -94,9 +96,13 @@ public class DoctorDTO {
 	public Long getId() {
 		return id;
 	}
-	
+
 	public static DoctorDTO convert(Doctor doctor) {
-		return new DoctorDTO(doctor.getId(), doctor.getFullName(), doctor.getAvatar(), doctor.getEmail(), doctor.getDegree(), doctor.getDescreption(), doctor.getDepartment().getName(), doctor.getPlaceOfwork());
+		DoctorDTO doctorDTO = new DoctorDTO(doctor.getId(), doctor.getFullName(), doctor.getAvatar(), doctor.getEmail(),
+				doctor.getDegree(), doctor.getDescreption(), doctor.getDepartment().getName(), doctor.getPlaceOfwork());
+		String url =   "http://localhost:8081/api/file/" + doctorDTO.getAvatar();
+		doctorDTO.setAvatar(url);
+		return doctorDTO;
 	}
 
 	public List<BookingReturnDTO> getBookings() {
@@ -106,7 +112,5 @@ public class DoctorDTO {
 	public void setBookings(List<BookingReturnDTO> bookings) {
 		this.bookings = bookings;
 	}
-	
-	
 
 }

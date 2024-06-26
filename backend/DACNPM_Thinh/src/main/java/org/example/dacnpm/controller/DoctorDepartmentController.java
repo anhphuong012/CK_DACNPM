@@ -14,6 +14,7 @@ import org.example.dacnpm.repositories.DepartmentRepository;
 import org.example.dacnpm.repositories.DoctorRepository;
 import org.example.dacnpm.repositories.SickRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -103,5 +104,16 @@ public class DoctorDepartmentController {
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ReposeOject("failed", "Not found", null));
 		}
+	}
+	
+	@GetMapping("/limit")
+	public @ResponseBody ResponseEntity<ReposeOject> finDoctorTop4(@RequestParam int size){
+		List<Doctor> listEntity = doctorRepository.findAll(PageRequest.of(0,size ));
+		List<DoctorDTO> result = new ArrayList<>();
+		for (Doctor doctor : listEntity) {
+			result.add(DoctorDTO.convert(doctor));
+		}
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ReposeOject("ok", "Query Shedule successfully", result));
 	}
 }

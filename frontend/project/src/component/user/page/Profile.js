@@ -5,14 +5,18 @@ import Footer from "./Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/profile.css";
 import axios from "axios";
+
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Profile() {
-  const [male, setMale] = useState(true);
+  // const [male, setMale] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
 
   const [data, setData] = useState(null);
   const [name, setName] = useState("");
+  const [sex, setSex] = useState("");
+
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [age, setAge] = useState("");
@@ -26,8 +30,8 @@ export default function Profile() {
       if (response.status == 200) {
         if (response.data.data != null) {
           setData(response.data.data);
-
           setName(response.data.data.fullName);
+          setSex(response.data.data.sex);
           setEmail(response.data.data.email);
           setPhone(response.data.data.phoneNumber);
           setAge(response.data.data.age);
@@ -50,8 +54,8 @@ export default function Profile() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fullName: name,
+          sex: sex,
           phoneNumber: phone,
-          sex: "Nam",
           email: email,
           age: age,
         }),
@@ -67,6 +71,7 @@ export default function Profile() {
         const data = await response.json();
         console.log(data);
         setData(data.data);
+        toast.success("Thay đổi thành công!");
       } catch (error) {}
     }
     updatePost();
@@ -74,6 +79,7 @@ export default function Profile() {
 
   const refesh = () => {
     setName(data.fullName);
+    setSex(data.sex);
     setEmail(data.email);
     setPhone(data.phoneNumber);
     setAge(data.age);
@@ -123,6 +129,22 @@ export default function Profile() {
                             value={name}
                             onChange={(event) => {
                               setName(event.target.value);
+                            }}
+                            readOnly={!isEdit}
+                          />
+                        </div>
+                        <hr />
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <h6 class="mb-0  mt-8">Giới tính</h6>
+                          </div>
+                          <input
+                            class="col-sm-9 text-secondary pd-tb-8 none-border"
+                            name="Sex"
+                            type="text"
+                            value={sex}
+                            onChange={(event) => {
+                              setSex(event.target.value);
                             }}
                             readOnly={!isEdit}
                           />
@@ -215,6 +237,7 @@ export default function Profile() {
                     </div>
                   </div>
                 </div>
+                <ToastContainer position="bottom-right" />
               </div>
             </div>
           )}

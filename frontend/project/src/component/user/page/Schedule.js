@@ -11,6 +11,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import axios from "axios";
 
 import { format, addDays, addMonths } from "date-fns";
 
@@ -44,6 +47,7 @@ export default function Schedule() {
   // const keyword = params.id;
 
   const [data, setData] = useState([]);
+  const [load, setLoad] = useState(true);
 
   useEffect(() => {
     fetchData(1);
@@ -59,6 +63,7 @@ export default function Schedule() {
         console.log(data.data);
         if (data.data != null) {
           setData(data.data);
+          setLoad(false);
         }
       });
   };
@@ -107,31 +112,42 @@ export default function Schedule() {
                   <TableCell align="left"></TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {data != [] &&
-                  data != undefined &&
-                  data.map((item, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {convertData(item.date)} {"  " + item.time} {}
-                      </TableCell>
-                      {item.doctor != undefined && item.doctor != null && (
-                        <TableCell align="left">
-                          {item.doctor.fullName}
+
+              {load && (
+                <Box sx={{ marginTop: "7rem", width: "100%", margin: "auto" }}>
+                  <CircularProgress />
+                </Box>
+              )}
+
+              {!load && (
+                <TableBody>
+                  {data != [] &&
+                    data != undefined &&
+                    data.map((item, index) => (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {convertData(item.date)} {"  " + item.time} {}
                         </TableCell>
-                      )}
-                      <TableCell align="left">
-                        <span class="badge bg-info">Đợi khám </span>
-                      </TableCell>
-                      <TableCell align="left">
-                        <button className="btn btn-danger">Hủy Lịch</button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
+                        {item.doctor != undefined && item.doctor != null && (
+                          <TableCell align="left">
+                            {item.doctor.fullName}
+                          </TableCell>
+                        )}
+                        <TableCell align="left">
+                          <span class="badge bg-info">Đợi khám </span>
+                        </TableCell>
+                        <TableCell align="left">
+                          <button className="btn btn-danger">Hủy Lịch</button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              )}
             </Table>
           </TableContainer>
         </div>

@@ -1,12 +1,16 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable no-sparse-arrays */
-import React, { useState, Component } from "react";
+import React, { useState, Component, useEffect } from "react";
 import "../css/home.css";
 import Header from "./Header";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Footer from "./Footer";
+
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import axios from "axios";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([
@@ -54,12 +58,30 @@ export default function Home() {
   ]);
 
   const [inputValue, setInputValue] = useState("");
+  const [data, setData] = useState(null);
 
+  const [isLoad, setIsLoad] = useState(true);
   //Xử lí lấy giá trị trong ô input tìm kiếm
   const handleChangeInputvalue = (event) => {
     const searchWord = event.target.value;
     setInputValue(searchWord);
   };
+
+  const fetchData = async () => {
+    const response = await axios.get(`/v1/doctor/limit?size=4`);
+
+    if (response.status == 200) {
+      if (response.data.data != null) {
+        setData(response.data.data);
+        setIsLoad(false);
+        console.log(data);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   //Component thông tin bác sĩ ở trang Home
   const Card = (props) => {
@@ -68,13 +90,13 @@ export default function Home() {
         <div class="card instruc-card" style={{ width: "300px" }}>
           <img
             class="card-img-top rounded-circle avata"
-            src={props.props.img}
+            src={props.props.avatar}
             alt="Card image"
           />
           <div class="card-body">
             <h4 class="card-title author-card">{props.props.name}</h4>
             <p class="text-sm text-des-card mr-b-2">{props.props.department}</p>
-            <p class="text-sm  text-des-card">{props.props.hospital}</p>
+            <p class="text-sm  text-des-card">{props.props.placeOfwork}</p>
             <a href={`/booking/${props.props.id}`} class="btn btn-primary">
               Đặt lịch
             </a>
@@ -146,12 +168,17 @@ export default function Home() {
             </button>
           </div> */}
         </div>
+        {isLoad && (
+          <Box sx={{ marginTop: "7rem", width: "100%", margin: "auto" }}>
+            <CircularProgress />
+          </Box>
+        )}
 
-        <div className="list-doctor">
-          {doctors.map((item) => (
-            <Card props={item}></Card>
-          ))}
-        </div>
+        {!isLoad && (
+          <div className="list-doctor">
+            {data != null && data.map((item) => <Card props={item}></Card>)}
+          </div>
+        )}
       </section>
       <Footer></Footer>
     </div>

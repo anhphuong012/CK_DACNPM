@@ -40,6 +40,7 @@ export default function Headers() {
     setAnchorEl(null);
     window.location.href = url;
   };
+  
   return (
     <div className="border-b">
       <header class="container d-flex justify-content-between mt-20 ">
@@ -137,7 +138,13 @@ export default function Headers() {
                   Lịch đã đặt
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={handleClose}>
+                <MenuItem
+                  onClick={() => {
+                    setAnchorEl(null);
+                    sessionStorage.clear();
+                    window.location.href = "/";
+                  }}
+                >
                   <ListItemIcon>
                     <LogoutIcon></LogoutIcon>
                   </ListItemIcon>
