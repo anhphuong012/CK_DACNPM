@@ -40,6 +40,7 @@ export default function Headers() {
     setAnchorEl(null);
     window.location.href = url;
   };
+  
   return (
     <div className="border-b">
       <header class="container d-flex justify-content-between mt-20 ">

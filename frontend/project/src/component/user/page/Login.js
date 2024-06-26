@@ -102,7 +102,7 @@ export default function LoginPage() {
                     <label class="form-check-label">Ghi nhớ tài khoản</label>
                   </div>
                   <div>
-                    <a href="" className="forget-pass">
+                    <a href="/forgot-password" className="forget-pass">
                       Quên mật khẩu?
                     </a>
                   </div>
@@ -114,9 +114,9 @@ export default function LoginPage() {
                 </div>
 
                 <div className="mt-4">
-                  Chưa có tài khoản ?{" "}
+                  Chưa có tài khoản?{" "}
                   <Link className="forget-pass" to="/register">
-                    Đăng kí ngay
+                    Đăng ký ngay
                   </Link>
                 </div>
               </div>
