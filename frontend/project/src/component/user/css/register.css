@@ -53,5 +53,19 @@ input[type="number"] {
 
 .css-5nwj3y {
     margin-top: 5px;
+    width: 17.5rem;
 }
 
+.css-5nwj3y {
+    display: flex;
+    justify-content: end;
+}
+
+.css-fhha1j-MuiButtonBase-root-MuiIconButton-root {
+    margin-left: 5px!important;
+}
+
+.user_name-header {
+    font-size: 17px;
+}
+    
