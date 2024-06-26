@@ -10,37 +10,81 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 export default function Register() {
-  const [sex, setSex] = useState("male");
-  const [checkPass, setCheckPass] = useState(true);
-  const [checkPhone, setCheckPhone] = useState(true);
-
+  // Các trạng thái để lưu trữ thông tin đầu vào của người dùng
   const [fullName, setFullName] = useState("");
   const [repass, setRepass] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
+  const [sex, setSex] = useState("Nam");
 
-  console.log("Pass:" + password);
-  console.log("Repass:" + repass);
 
+  // kiểm tra
+  const [checkEmail, setCheckEmail] = useState(true);
+  // const [checkPass, setCheckPass] = useState(true);
+  // const [checkPhone, setCheckPhone] = useState(true);
+  // const [checkPasswordLength, setCheckPasswordLength] = useState(true);
+  const [checkPass, setCheckPass] = useState(null);
+  const [checkPhone, setCheckPhone] = useState(null);
+  const [checkPasswordLength, setCheckPasswordLength] = useState(null);
+
+  // Xử lý sự kiện khi người dùng thay đổi giá trị trường mật khẩu nhập lại
   const handleRepass = (event) => {
     setRepass(event.target.value);
   };
 
+  // Theo dõi sự thay đổi của mật khẩu và mật khẩu nhập lại để kiểm tra sự trùng khớp
   useEffect(() => {
-    setCheckPass(password == repass);
+    setCheckPass(password === repass);
   }, [repass, password]);
 
+  // Theo dõi sự thay đổi của số điện thoại để kiểm tra định dạng và độ dài
+  // useEffect(() => {
+  //   setCheckPhone(phone.length === 10 && phone.startsWith("0"));
+  // }, [phone]);
   useEffect(() => {
-    setCheckPhone(phone.length == 10 && phone.startsWith("0"));
+    if (phone.length > 0) {
+      setCheckPhone(phone.length === 10 && phone.startsWith("0"));
+    } else {
+      setCheckPhone(null);
+    }
   }, [phone]);
 
+  // Xử lý sự kiện khi người dùng thay đổi giá trị của trường giới tính
   const radioChange = (event) => {
     setSex(event.target.value);
   };
 
-  const register = async () => {
+  // Hàm kiểm tra email hợp lệ bằng regex
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  // Kiểm tra độ dài mật khẩu
+  // useEffect(() => {
+  //   setCheckPasswordLength(password.length >= 6);
+  // }, [password]);
+  useEffect(() => {
+    if (password.length > 0) {
+      setCheckPasswordLength(password.length >= 6);
+    } else {
+      setCheckPasswordLength(null);
+    }
+  }, [password]);
+
+
+  // Hàm đăng ký tài khoản
+  const register = async (event) => {
+    event.preventDefault(); // Ngăn chặn hành vi mặc định của nút submit
+    // Kiểm tra tính hợp lệ của email
+    setCheckEmail(validateEmail(email));
+    if (!validateEmail(email)) {
+      return; // Dừng lại nếu email không hợp lệ hoặc mật khẩu không đủ dài
+    }
+    
+    // Gửi yêu cầu đăng ký tài khoản lên server
     await axios({
       method: "post",
       maxBodyLength: Infinity,
@@ -59,45 +103,46 @@ export default function Register() {
       }),
     }).then(function (response) {
       console.log(response);
-      if (response.status == 201) {
-        if (response.data.data.role == "user") {
+      if (response.status === 201) {
+        if (response.data.data.role === "user") {
           var user = response.data.data.patient;
           sessionStorage.setItem("user", JSON.stringify(user));
           document.location.href = "/";
         }
-      } else if (response.status == 204) {
-        toast.error("Số điện thoại đã có trên hệ thống!");
+      } else if (response.status === 204) {
+        toast.error("Số điện thoại này hiện tại đã được sử dụng!");
       }
     });
   };
+
   return (
     <div>
-      <Header></Header>
+      <Header />
       <section>
-        <div class="bg-light py-3 py-md-5">
-          <div class="container">
-            <div class="row justify-content-md-center">
-              <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
-                <div class="bg-white p-4 p-md-5 rounded shadow-sm">
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="mb-5">
-                        <h2 class="h3">Đăng kí tài khoản</h2>
-                        <h3 class="fs-6 fw-normal text-secondary m-0">
-                          Điền thông tin để đăng kí
+        <div className="bg-light py-3 py-md-5">
+          <div className="container">
+            <div className="row justify-content-md-center">
+              <div className="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+                <div className="bg-white p-4 p-md-5 rounded shadow-sm">
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="mb-5">
+                        <h2 className="h3">Đăng ký tài khoản</h2>
+                        <h3 className="fs-6 fw-normal text-secondary m-0">
+                          Điền thông tin để đăng ký
                         </h3>
                       </div>
                     </div>
                   </div>
                   <form action="#!">
-                    <div class=" text-just row gy-3 gy-md-4 overflow-hidden">
-                      <div class="col-12">
-                        <label for="firstName" class="form-label">
-                          Họ và tên <span class="text-danger">*</span>
+                    <div className="text-just row gy-3 gy-md-4 overflow-hidden">
+                      <div className="col-12">
+                        <label htmlFor="firstName" className="form-label">
+                          Họ và tên <span className="text-danger">*</span>
                         </label>
                         <input
                           type="text"
-                          class="form-control"
+                          className="form-control"
                           name="fullName"
                           id="fullName"
                           placeholder="Họ và tên"
@@ -106,34 +151,38 @@ export default function Register() {
                           onChange={(event) => setFullName(event.target.value)}
                         />
                       </div>
-                      <div class="col-12">
-                        <label for="lastName" class="form-label">
-                          Số điện thoại<span class="text-danger">*</span>
+                      <div className="col-12">
+                        <label htmlFor="lastName" className="form-label">
+                          Số điện thoại<span className="text-danger">*</span>
                         </label>
                         <input
                           type="text"
-                          class="form-control"
+                          className="form-control"
                           name="phone"
                           id="phone"
-                          placeholder="Ví dụ : 0399..."
+                          placeholder="Ví dụ: 0399..."
                           value={phone}
                           onChange={(event) => setPhone(event.target.value)}
                           required
                         />
-
-                        {!checkPhone && (
+                        {/* {!checkPhone && (
+                          <p className="text-danger">
+                            Số điện thoại phải đúng định dạng và 10 chữ số
+                          </p>
+                        )} */}
+                        {!checkPhone && phone.length > 0 && (
                           <p className="text-danger">
                             Số điện thoại phải đúng định dạng và 10 chữ số
                           </p>
                         )}
                       </div>
-                      <div class="col-12">
-                        <label for="email" class="form-label">
-                          Email <span class="text-danger">*</span>
+                      <div className="col-12">
+                        <label htmlFor="email" className="form-label">
+                          Email <span className="text-danger">*</span>
                         </label>
                         <input
                           type="email"
-                          class="form-control"
+                          className="form-control"
                           name="email"
                           id="email"
                           placeholder="name@example.com"
@@ -141,205 +190,151 @@ export default function Register() {
                           onChange={(event) => setEmail(event.target.value)}
                           required
                         />
+                        {!checkEmail && (
+                          <p className="text-danger">Email không hợp lệ</p>
+                        )}
                       </div>
 
-                      <div class="col-12">
-                        <label for="age" class="form-label">
-                          Tuổi: <span class="text-danger">*</span>
+                      <div className="col-12">
+                        <label htmlFor="age" className="form-label">
+                          Tuổi: <span className="text-danger">*</span>
                         </label>
                         <input
                           type="number"
-                          class="form-control"
+                          className="form-control"
                           name="age"
                           id="age"
                           value={age}
-                          onChange={(event) => setAge(event.target.value)}
+                          onChange={(event) => {
+                            let enteredValue = parseInt(event.target.value, 10);
+                            // Kiểm tra giá trị nhập vào để đảm bảo nó nằm trong khoảng từ 0 đến 200
+                            if (enteredValue < 0) {
+                              enteredValue = 0;
+                            } else if (enteredValue > 200) {
+                              enteredValue = 200;
+                            } 
+                            setAge(enteredValue);
+                          }}
                           required
                         />
                       </div>
-
-                      <div class="col-12">
-                        <label for="email" class="form-label">
-                          Giới tính<span class="text-danger">*</span>
+                      <div className="col-12">
+                        <label htmlFor="email" className="form-label">
+                          Giới tính<span className="text-danger">*</span>
                         </label>
                         <div className="sex-check">
-                          <div class="form-check">
+                          <div className="form-check">
                             <input
                               type="radio"
-                              class="form-check-input"
+                              className="form-check-input"
                               id="radio1"
                               name="optradio"
-                              value="male"
+                              value="Nam"
                               onChange={radioChange}
-                              checked={sex === "male"}
+                              checked={sex === "Nam"}
                             />
-                            <label class="form-check-label" for="radio1">
+                            <label className="form-check-label" htmlFor="radio1">
                               Nam
                             </label>
                           </div>
-                          <div class="form-check">
+                          <div className="form-check">
                             <input
                               type="radio"
-                              class="form-check-input"
+                              className="form-check-input"
                               id="radio2"
                               name="optradio"
-                              value="female"
+                              value="Nữ"
                               onChange={radioChange}
-                              checked={sex === "female"}
+                              checked={sex === "Nữ"}
                             />
-                            <label class="form-check-label" for="radio2">
+                            <label className="form-check-label" htmlFor="radio2">
                               Nữ
                             </label>
                           </div>
-                          <div class="form-check">
+                          <div className="form-check">
                             <input
                               type="radio"
-                              class="form-check-input"
+                              className="form-check-input"
                               id="radio3"
                               name="optradio"
-                              value="other"
+                              value="Khác"
                               onChange={radioChange}
-                              checked={sex === "other"}
+                              checked={sex === "Khác"}
                             />
-                            <label class="form-check-label" for="radio3">
+                            <label className="form-check-label" htmlFor="radio3">
                               Khác
                             </label>
                           </div>
                         </div>
                       </div>
-
-                      <div class="col-12">
-                        <label for="password" class="form-label">
-                          Mật khẩu <span class="text-danger">*</span>
+                      <div className="col-12 div_block-pass">
+                        <label htmlFor="password" className="form-label">
+                          Mật khẩu <span className="text-danger">*</span>
                         </label>
                         <input
                           type="password"
-                          class="form-control"
+                          className="form-control"
                           name="password"
                           id="password"
                           value={password}
-                          onChange={(event) => {
-                            setPassword(event.target.value);
-                          }}
+                          onChange={(event) => setPassword(event.target.value)}
                           required
                         />
+                        {/* {!checkPasswordLength && (
+                          <p className="text-danger">
+                            Mật khẩu phải có ít nhất 6 ký tự
+                          </p>
+                        )} */}
+                        {!checkPasswordLength && password.length > 0 && (
+                          <p className="text-danger">
+                            Mật khẩu phải có ít nhất 6 ký tự
+                          </p>
+                        )}
                       </div>
 
-                      <div class="col-12">
-                        <label for="re-password" class="form-label">
-                          Điền lại mật khẩu <span class="text-danger">*</span>
+                      <div className="col-12">
+                        <label htmlFor="re-password" className="form-label">
+                          Điền lại mật khẩu <span className="text-danger">*</span>
                         </label>
                         <input
                           type="password"
-                          class="form-control"
+                          className="form-control"
                           name="re-password"
                           id="re-password"
                           value={repass}
                           onChange={handleRepass}
                           required
                         />
-
                         {!checkPass && (
-                          <p className="text-danger">
-                            Mật khẩu không trùng khớp
-                          </p>
+                          <p className="text-danger">Mật khẩu không trùng khớp</p>
                         )}
                       </div>
-                      {/* <div class="col-12">
-                        <div class="form-check">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            name="iAgree"
-                            id="iAgree"
-                            required
-                          />
-                          <label
-                            class="form-check-label text-secondary"
-                            for="iAgree"
-                          >
-                            Đồng ý với các điều khoản ?
-                          </label>
-                        </div>
-                      </div> */}
-                      <div class="col-12">
-                        <div class="d-grid">
+                      <div className="col-12">
+                        <div className="d-grid">
                           <button
-                            class={`btn btn-lg btn-primary ${
-                              checkPass && checkPhone ? "" : "disabled"
-                            }`}
+                            className={`btn btn-lg btn-primary ${checkPass && checkPhone ? "" : "disabled"}`}
+                            // className={`btn btn-lg btn-primary ${fieldsFilled ? "" : "disabled"}`}
                             type="submit"
                             onClick={register}
                           >
-                            Đăng kí
+                            Đăng ký
                           </button>
                         </div>
                       </div>
                     </div>
                   </form>
-                  <div class="row mb-3 mt-3">
-                    <div class="col-12">
-                      {/* <hr class="mt-5 mb-4 border-secondary-subtle"> */}
-                      <div class="col-12">
-                        <p class="m-0 text-secondary text-center">
-                          Đã có tài khoản ?{" "}
-                          <Link
-                            to="/login"
-                            class="link-primary text-decoration-none"
-                          >
+                  <div className="row mb-3 mt-3">
+                    <div className="col-12">
+                      <div className="col-12">
+                        <p className="m-0 text-secondary text-center">
+                          Đã có tài khoản?{" "}
+                          <Link to="/login" className="link-primary text-decoration-none">
                             Đăng nhập
                           </Link>
                         </p>
                       </div>
                     </div>
                   </div>
-                  {/* <div class="row">
-                    <div class="col-12">
-                      <p class="mt-5 mb-4">Or sign in with</p>
-                      <div class="d-flex gap-3 flex-column flex-md-row">
-                        <a href="#!" class="btn bsb-btn-xl btn-outline-primary">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-google"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
-                          </svg>
-                          <span class="ms-2 fs-6">Google</span>
-                        </a>
-                        <a href="#!" class="btn bsb-btn-xl btn-outline-primary">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-facebook"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
-                          </svg>
-                          <span class="ms-2 fs-6">Facebook</span>
-                        </a>
-                        <a href="#!" class="btn bsb-btn-xl btn-outline-primary">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-twitter"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
-                          </svg>
-                          <span class="ms-2 fs-6">Twitter</span>
-                        </a>
-                      </div>
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </div>
@@ -347,7 +342,7 @@ export default function Register() {
           <ToastContainer position="bottom-right" />
         </div>
       </section>
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 }

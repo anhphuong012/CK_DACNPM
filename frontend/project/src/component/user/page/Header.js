@@ -18,6 +18,7 @@ import logoPan from "../img/Logo_PanBee_png.png";
 import Tooltip from "@mui/material/Tooltip";
 export default function Headers() {
   const [isLogin, setIsLogin] = useState(false);
+  const [userName, setUserName] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -28,18 +29,38 @@ export default function Headers() {
     setAnchorEl(null);
   };
 
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("user") != null) {
+  //     setIsLogin(true);
+  //     console.log(sessionStorage.getItem("user"))
+  //     // setUserName(user.fullName)
+  //   } else {
+  //     setIsLogin(false);
+  //   }
+  // }, []);
+
   useEffect(() => {
-    if (sessionStorage.getItem("user") != null) {
+    // Lấy thông tin người dùng từ sessionStorage
+    const user = sessionStorage.getItem("user");
+    if (user) {
+      // Parse JSON để lấy đối tượng người dùng
+      const userData = JSON.parse(user);
       setIsLogin(true);
+      // Đặt tên người dùng từ đối tượng đã parse vào state userName
+      setUserName(userData.fullName);
     } else {
       setIsLogin(false);
     }
   }, []);
+  
+
+  
 
   const handleForward = (url) => {
     setAnchorEl(null);
     window.location.href = url;
   };
+
   return (
     <div className="border-b">
       <header class="container d-flex justify-content-between mt-20 ">
@@ -82,11 +103,11 @@ export default function Headers() {
                     aria-expanded={open ? "true" : undefined}
                     color="success"
                   >
-                    <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                    <Avatar sx={{ width: 32, height: 32 }}>{userName.charAt(0)}</Avatar>
                   </IconButton>
                 </Tooltip>
                 <div className="name-header">
-                  <p>Nguyễn Ngọc Phương</p>
+                  <p className="user_name-header">{userName}</p>
                 </div>
               </Box>
               <Menu
