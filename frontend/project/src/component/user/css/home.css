@@ -169,3 +169,25 @@
 .color-black {
     color: #000000d9;
 }
+.relative {
+    position: relative;
+}
+.auto-complete {
+    position: absolute;
+    width: 67.5%;
+    max-height: 100px;
+    background-color: white;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    border-radius: 12px;
+   
+}
+.btn-auto_complete {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    padding: 4px 40px;
+    border-bottom: 1px solid #000;
+}

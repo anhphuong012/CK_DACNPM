@@ -60,6 +60,8 @@ export default function Home() {
   const [inputValue, setInputValue] = useState("");
   const [data, setData] = useState(null);
 
+  const [search, setSearch] = useState(null);
+
   const [isLoad, setIsLoad] = useState(true);
   //Xử lí lấy giá trị trong ô input tìm kiếm
   const handleChangeInputvalue = (event) => {
@@ -82,6 +84,29 @@ export default function Home() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const auto = async (value) => {
+    const response = await axios.get(`/v1/sick?name=${value}`);
+
+    if (response.status == 200) {
+      if (response.data.data != null) {
+        setSearch(response.data.data);
+      }
+    }
+  };
+  useEffect(() => {
+    console.log("Compare:" + (inputValue == ""));
+    if (inputValue == "") {
+      setSearch(null);
+    } else {
+      auto(inputValue);
+    }
+  }, [inputValue]);
+
+  const clickauto = (name) => {
+    setInputValue(name);
+    setSearch(null);
+  };
 
   //Component thông tin bác sĩ ở trang Home
   const Card = (props) => {
@@ -122,7 +147,7 @@ export default function Home() {
         </div>
 
         <div div="wrap-search" style={{ minWidth: "70%" }}>
-          <div class="input-group mb-3 input-group-lg">
+          <div class="input-group input-group-lg relative">
             <input
               placeholder="Nhập triệu chứng,tên bác sĩ .."
               type="text"
@@ -143,6 +168,28 @@ export default function Home() {
               <i class="bi bi-search"></i>
             </a>
           </div>
+
+          {search != null && inputValue != "" && (
+            <div className={"auto-complete"}>
+              {search.map((item) => {
+                return (
+                  <div key={item.id}>
+                    <button
+                      className="btn-auto_complete "
+                      onClick={() => {
+                        // setInputValue(item.name);
+                        // setSearch(null);
+                        clickauto(item.name);
+                      }}
+                    >
+                      {" "}
+                      {item.name}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
