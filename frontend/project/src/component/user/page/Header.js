@@ -76,7 +76,10 @@ export default function Headers() {
           </a>
         </div>
         {!isLogin && (
-          <div>
+          <div id="block-isNotLogin">
+            <a type="button" href="/register" class="btn btn-outline-primary btn_register-home">
+              Đăng ký
+            </a>
             <a type="button" href="/login" class="btn btn-outline-primary">
               Đăng nhập
             </a>
@@ -84,7 +87,7 @@ export default function Headers() {
         )}
 
         {isLogin && (
-          <div>
+          <div className="account-login">
             <React.Fragment>
               <Box
                 sx={{
@@ -92,8 +95,12 @@ export default function Headers() {
                   alignItems: "center",
                   textAlign: "center",
                 }}
+                
               >
-                <Tooltip title="Account settings">
+                <div className="name-header">
+                  <p className="user_name-header">{userName}</p>
+                </div>
+                <Tooltip title="Cài đặt tài khoản">
                   <IconButton
                     onClick={handleClick}
                     size="small"
@@ -106,9 +113,7 @@ export default function Headers() {
                     <Avatar sx={{ width: 32, height: 32 }}>{userName.charAt(0)}</Avatar>
                   </IconButton>
                 </Tooltip>
-                <div className="name-header">
-                  <p className="user_name-header">{userName}</p>
-                </div>
+
               </Box>
               <Menu
                 anchorEl={anchorEl}

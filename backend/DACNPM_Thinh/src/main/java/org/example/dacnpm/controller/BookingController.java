@@ -2,9 +2,11 @@ package org.example.dacnpm.controller;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.example.dacnpm.Service.IBookingService;
 import org.example.dacnpm.dto.BookingDTO;
 import org.example.dacnpm.dto.BookingReturnDTO;
 import org.example.dacnpm.dto.DoctorDTO;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +37,9 @@ public class BookingController {
 	private PatientRepository patientRepository;
 	@Autowired
 	private DoctorRepository doctorRepository;
+	
+	@Autowired
+	private IBookingService bookingService;
 	
 	@PostMapping("/add")
 	 public @ResponseBody ResponseEntity<ReposeOject> insertBooking(@RequestBody BookingDTO bookingDTO){
@@ -147,8 +153,9 @@ public class BookingController {
 	public @ResponseBody ResponseEntity<ReposeOject> getBookingByPatientId(@PathVariable("id")long patientId){
 		Patient patient = patientRepository.findById(patientId).get();
 		
-		List<Booking> bookings = bookingRepository.findByPatientOrderByIdDesc(patient);
-		
+//		List<Booking> bookings = bookingRepository.findByPatientOrderByIdDesc(patient);
+		Date now = Date.valueOf(LocalDate.now());
+		List<Booking> bookings = bookingRepository.findBookingAvailable(patientId, now);
 		
 		List<BookingReturnDTO> bookingResult = new ArrayList<>();
 		
@@ -171,6 +178,14 @@ public class BookingController {
 
 		
 	}
-
+	@PutMapping("/cancel/{id}")
+	public ResponseEntity<ReposeOject> cancelBooking(@PathVariable("id") long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(bookingService.cancelBooking(id));
+	}
+	
+	@GetMapping("/patient/done/{pId}")
+	public ResponseEntity<ReposeOject> getBookingHaveGone(@PathVariable("pId") long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(bookingService.findBookingHaveGone(id));
+	}
 
 }

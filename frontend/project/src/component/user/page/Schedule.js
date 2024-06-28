@@ -19,6 +19,7 @@ import { format, addDays, addMonths } from "date-fns";
 
 import "../css/schedule.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { toast } from "react-toastify";
 
 const rows = [
   createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
@@ -81,15 +82,45 @@ export default function Schedule() {
     return format(addDays(myDate, 1), "dd-MM-yyyy");
   };
 
+  const getDateCurrent = () => {
+    const date = new Date();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    var myDate = new Date(
+      parseInt(date.getFullYear()),
+      parseInt(month),
+      parseInt(day)
+    );
+    return format(addDays(myDate, 0), "dd-MM-yyyy");
+  };
+
+  const cancel = async (id) => {
+    setLoad(true);
+    await axios({
+      method: "put",
+      url: `/v1/booking/cancel/${id}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(function (response) {
+      setLoad(false);
+      if (response.status == 200) {
+        fetchData(1);
+      } else {
+        toast.error("Đã gặp lỗi");
+      }
+    });
+  };
+
   return (
     <div>
       <Header></Header>
       <section className="bg-gray pd-t-20">
         <div className="container bg-slate-100 pd-20 pd-b-40">
-          <h1 className="text-lg font-semibold mb-3">Lịch đã đặt</h1>
+          <h1 className="text-lg font-semibold mb-3">Lịch chưa/đang khám</h1>
           <div className="wrap__btn-cancel">
             <Link className="btn btn-outline-danger" to="/schedulecancel">
-              Lịch đã hủy
+              Lịch đã/hủy khám
             </Link>
           </div>
           <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
@@ -139,10 +170,23 @@ export default function Schedule() {
                           </TableCell>
                         )}
                         <TableCell align="left">
-                          <span class="badge bg-info">Đợi khám </span>
+                          {getDateCurrent() == convertData(item.date) ? (
+                            <span class="badge bg-info">Đang khám </span>
+                          ) : (
+                            <span class="badge bg-primary">Chưa khám </span>
+                          )}
                         </TableCell>
                         <TableCell align="left">
-                          <button className="btn btn-danger">Hủy Lịch</button>
+                          {getDateCurrent() != convertData(item.date) ? (
+                            <button
+                              onClick={() => cancel(item.id)}
+                              className="btn btn-danger"
+                            >
+                              Hủy Lịch
+                            </button>
+                          ) : (
+                            <></>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
