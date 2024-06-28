@@ -64,7 +64,7 @@ public class BookingController {
 			if(save != null) {
 				String text = "Đặt lich kham benh thanh cong \n" +
 							"kinh gui: "+booking.getPatient() +
-						"\nma so: "+booking.getId() +
+						"\n+ma so: "+booking.getId() +
 						"\nthoi gian: " + booking.getTime() +" ngay " + booking.getDate()+
 						"\nbac si: " + booking.getDoctor();
 				SendEmail.sendMail(booking.getPatient().getEmail(),"Thông Bao Dat Lich Kham Benh", text);
@@ -97,7 +97,7 @@ public class BookingController {
 	public @ResponseBody ResponseEntity<ReposeOject> getBookingByDoctorId(@PathVariable("id")long doctorId,@RequestParam(value = "date",required = false) List<String> date){
 		Doctor doctor = doctorRepository.findById(doctorId).get();
 		
-		List<Booking> bookings = bookingRepository.findByDoctor(doctor);
+		List<Booking> bookings = bookingRepository.findByDoctorAndStatus(doctor,1);
 		
 		
 		List<BookingReturnDTO> bookingResult = new ArrayList<>();

@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface BookingRepository extends CrudRepository<Booking, Long> {
 
-	List<Booking> findByDoctor(Doctor doctor);
+	List<Booking> findByDoctorAndStatus(Doctor doctor,Integer status);
 
 	List<Booking> findByPatient(Patient patient);
 
