@@ -21,7 +21,7 @@ export default function Profile() {
   const [phone, setPhone] = useState("");
   const [age, setAge] = useState("");
 
-  const fetchData = async (keyword) => {
+  const fetchData = async () => {
     try {
       const user = JSON.parse(sessionStorage.getItem("user"));
 
@@ -42,7 +42,7 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    fetchData(1);
+    fetchData();
   }, []);
 
   console.log(data);
@@ -71,6 +71,8 @@ export default function Profile() {
         const data = await response.json();
         console.log(data);
         setData(data.data);
+
+        sessionStorage.setItem("user", JSON.stringify(data.data));
         toast.success("Thay đổi thành công!");
       } catch (error) {}
     }

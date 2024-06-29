@@ -19,29 +19,9 @@ import { format, addDays, addMonths } from "date-fns";
 
 import "../css/schedule.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { toast } from "react-toastify";
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Schedule() {
   // const params = useParams();
@@ -50,23 +30,29 @@ export default function Schedule() {
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(true);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    fetchData(1);
+    fetchData();
   }, []);
 
-  const fetchData = (id) => {
+  const fetchData = () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
-    const fetchPromise = fetch(`/v1/booking/patient/${user.id}`);
+    if (user == null) {
+      navigate("/login");
+    } else {
+      const fetchPromise = fetch(`/v1/booking/patient/${user.id}`);
 
-    fetchPromise
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.data);
-        if (data.data != null) {
-          setData(data.data);
-          setLoad(false);
-        }
-      });
+      fetchPromise
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.data);
+          if (data.data != null) {
+            setData(data.data);
+            setLoad(false);
+          }
+        });
+    }
   };
 
   console.log(data);
@@ -105,7 +91,10 @@ export default function Schedule() {
     }).then(function (response) {
       setLoad(false);
       if (response.status == 200) {
-        fetchData(1);
+        // fetchData();
+        const newData = data.filter((item) => item.id !== id);
+        setData(newData);
+        toast.success("Hủy thành công!");
       } else {
         toast.error("Đã gặp lỗi");
       }
@@ -195,6 +184,7 @@ export default function Schedule() {
             </Table>
           </TableContainer>
         </div>
+        <ToastContainer position="bottom-right" />
       </section>
       <Footer></Footer>
     </div>

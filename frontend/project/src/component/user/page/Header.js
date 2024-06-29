@@ -15,12 +15,16 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 import logoPan from "../img/Logo_PanBee_png.png";
 
+import { useNavigate, Link } from "react-router-dom";
+
 import Tooltip from "@mui/material/Tooltip";
 export default function Headers() {
   const [isLogin, setIsLogin] = useState(false);
   const [userName, setUserName] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const navigate = useNavigate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -52,13 +56,11 @@ export default function Headers() {
       setIsLogin(false);
     }
   }, []);
-  
-
-  
 
   const handleForward = (url) => {
     setAnchorEl(null);
-    window.location.href = url;
+    // window.location.href = url;
+    navigate(url);
   };
 
   return (
@@ -71,18 +73,22 @@ export default function Headers() {
         </div>
 
         <div className="nav">
-          <a href="/" className="nav-link">
+          <Link to="/" className="nav-link">
             Trang chủ
-          </a>
+          </Link>
         </div>
         {!isLogin && (
           <div id="block-isNotLogin">
-            <a type="button" href="/register" class="btn btn-outline-primary btn_register-home">
+            <Link
+              type="button"
+              to="/register"
+              class="btn btn-outline-primary btn_register-home"
+            >
               Đăng ký
-            </a>
-            <a type="button" href="/login" class="btn btn-outline-primary">
+            </Link>
+            <Link type="button" to="/login" class="btn btn-outline-primary">
               Đăng nhập
-            </a>
+            </Link>
           </div>
         )}
 
@@ -95,7 +101,6 @@ export default function Headers() {
                   alignItems: "center",
                   textAlign: "center",
                 }}
-                
               >
                 <div className="name-header">
                   <p className="user_name-header">{userName}</p>
@@ -110,10 +115,11 @@ export default function Headers() {
                     aria-expanded={open ? "true" : undefined}
                     color="success"
                   >
-                    <Avatar sx={{ width: 32, height: 32 }}>{userName.charAt(0)}</Avatar>
+                    <Avatar sx={{ width: 32, height: 32 }}>
+                      {userName.charAt(0)}
+                    </Avatar>
                   </IconButton>
                 </Tooltip>
-
               </Box>
               <Menu
                 anchorEl={anchorEl}
@@ -167,7 +173,10 @@ export default function Headers() {
                   onClick={() => {
                     setAnchorEl(null);
                     sessionStorage.clear();
-                    window.location.href = "/";
+                    // window.location.href = "/";
+                    navigate("/");
+                    setIsLogin(false);
+                    setAnchorEl(null);
                   }}
                 >
                   <ListItemIcon>

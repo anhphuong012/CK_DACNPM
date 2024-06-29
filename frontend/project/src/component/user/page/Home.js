@@ -12,57 +12,16 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 
+import { useNavigate } from "react-router-dom";
 export default function Home() {
-  const [doctors, setDoctors] = useState([
-    {
-      id: 79822,
-      name: "Lê Thị Minh Hồng",
-      agree: "",
-      department: "Nhi Khoa",
-      hospital: "Bệnh viện Nhi Đồng 2",
-      img: "https://cdn.youmed.vn/photos/6482af81-ab7d-4587-b011-8a9bad38a1e9.png?width=100&aspect_ratio=1:1",
-    },
-    {
-      id: 2,
-      name: "Lâm Việt Trung",
-      agree: "PGS",
-      department: "Tiêu Hóa",
-      hospital: "Bệnh viện chợ Rẫy",
-      img: "https://cdn.youmed.vn/photos/4f01e016-00cf-498c-a82e-761393de038c.jpeg?width=100&aspect_ratio=1:1",
-    },
-    {
-      id: 3,
-      name: "Nguyễn Thị Thu Hà",
-      agree: "",
-      department: "Nhi Khoa",
-      hospital: "Bệnh viện Nhi Đồng Thành Phố",
-      img: "https://cdn.youmed.vn/photos/d9bdabb7-7afb-419a-8533-db34a775e504.jpg?width=100&aspect_ratio=1:1",
-    },
-    {
-      id: 4,
-      name: "Võ Đực Hiếu",
-      agree: "",
-      department: "Ung bướu",
-      hospital: "Bệnh viện Ung Bứu",
-      img: "https://cdn.youmed.vn/photos/09f68f6c-131b-45ed-97d6-afdc89fa51e3.jpg?width=100&aspect_ratio=1:1",
-    },
-    ,
-    {
-      id: 5,
-      name: "Trần Quang Nam",
-      agree: "TS",
-      department: "Nội Tiết",
-      hospital: "Bệnh viện Trường ĐH Y Dược",
-      img: "https://cdn.youmed.vn/photos/68c2307d-18f8-4e97-9ef3-99fea20a286d.png?width=100&aspect_ratio=1:1",
-    },
-  ]);
-
   const [inputValue, setInputValue] = useState("");
   const [data, setData] = useState(null);
 
   const [search, setSearch] = useState(null);
 
   const [isLoad, setIsLoad] = useState(true);
+
+  const navigate = useNavigate();
   //Xử lí lấy giá trị trong ô input tìm kiếm
   const handleChangeInputvalue = (event) => {
     const searchWord = event.target.value;
@@ -122,9 +81,14 @@ export default function Home() {
             <h4 class="card-title author-card">{props.props.name}</h4>
             <p class="text-sm text-des-card mr-b-2">{props.props.department}</p>
             <p class="text-sm  text-des-card">{props.props.placeOfwork}</p>
-            <a href={`/booking/${props.props.id}`} class="btn btn-primary">
+            <button
+              class="btn btn-primary"
+              onClick={() => {
+                navigate(`/booking/${props.props.id}`);
+              }}
+            >
               Đặt lịch
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -157,16 +121,20 @@ export default function Home() {
               /**Xử lí sự kiện nếu bấm enter */
               onKeyPress={(event) => {
                 if (event.key === "Enter") {
-                  window.location.href = `/search/${inputValue}`;
+                  // window.location.href = `/search/${inputValue}`;
+                  navigate(`/search/${inputValue}`);
                 }
               }}
             />
-            <a
+            <button
               className="btn-search color-black "
-              href={`/search/${inputValue}`}
+              // href={`/search/${inputValue}`}
+              onClick={() => {
+                navigate(`/search/${inputValue}`);
+              }}
             >
               <i class="bi bi-search"></i>
-            </a>
+            </button>
           </div>
 
           {search != null && inputValue != "" && (

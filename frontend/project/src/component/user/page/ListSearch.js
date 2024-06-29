@@ -11,6 +11,10 @@ import { useParams } from "react-router-dom";
 import Footer from "./Footer";
 import "../css/search.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
+
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 export default function ListSearch() {
   //Lấy giá trị search truyền qua
@@ -18,6 +22,9 @@ export default function ListSearch() {
   const keyword = params.keyword;
 
   const [data, setData] = useState([]);
+  const [load, setLoad] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData(keyword);
@@ -31,6 +38,7 @@ export default function ListSearch() {
       .then((data) => {
         if (data.data != null) {
           setData(data.data);
+          setLoad(false);
         }
       });
   };
@@ -98,67 +106,77 @@ export default function ListSearch() {
   return (
     <div>
       <Header></Header>
-      <section className="bg-white mt-4 boder-b">
-        <div className="header-container mr-l-r-auto">
-          <div
-            className="wrap-search mr-l-r-auto just-center"
-            style={{ paddingTop: "20px" }}
-          >
-            <div class="input-group mb-3 input-group-lg w-50 ">
-              <input
-                placeholder="Nhập triệu chứng,tên bác sĩ..."
-                type="text"
-                class="form-control search bg-gray-100"
-                id="input-search"
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    window.location.href = `/search/${event.target.value}`;
-                  }
-                }}
-              />
-              <button className="btn-search " onClick={handleSubmit}>
-                <i class="bi bi-search color-primary"></i>
-              </button>
+      {!load && (
+        <div>
+          <section className="bg-white mt-4 boder-b">
+            <div className="header-container mr-l-r-auto">
+              <div
+                className="wrap-search mr-l-r-auto just-center"
+                style={{ paddingTop: "20px" }}
+              >
+                <div class="input-group mb-3 input-group-lg w-50 ">
+                  <input
+                    placeholder="Nhập triệu chứng,tên bác sĩ..."
+                    type="text"
+                    class="form-control search bg-gray-100"
+                    id="input-search"
+                    onKeyPress={(event) => {
+                      if (event.key === "Enter") {
+                        // window.location.href = `/search/${event.target.value}`;
+                        navigate(`/search/${event.target.value}`);
+                      }
+                    }}
+                  />
+                  <button className="btn-search " onClick={handleSubmit}>
+                    <i class="bi bi-search color-primary"></i>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
+          </section>
+          <section className="bg-gray-100 pd-30 ">
+            <div className="container w-90">
+              <div className="bg-white result-search">
+                {data.length > 0 && (
+                  <span>
+                    Có {data.length} Bác sĩ được tìm thấy cho triệu chứng hoặc
+                    tên "{keyword}"
+                  </span>
+                )}
+                {data.length == 0 && (
+                  <span>
+                    Không tìm thấy Bác sĩ cho triệu chứng hoặc tên "{keyword}"
+                  </span>
+                )}
+              </div>
+              <Divider></Divider>
+              <List
+                sx={{
+                  width: "100%",
+                  maxWidth: "100%",
+                  bgcolor: "background.paper",
+                  paddingBottom: "10px",
+                }}
+                style={{ borderRadius: "0px 0px 10px 10px" }}
+              >
+                {data.length > 0 &&
+                  data.map((doctor) => {
+                    return (
+                      <div key={doctor.id}>
+                        <Doctor props={doctor}></Doctor>
+                      </div>
+                    );
+                  })}
+              </List>
+            </div>
+          </section>
         </div>
-      </section>
-      <section className="bg-gray-100 pd-30 ">
-        <div className="container w-90">
-          <div className="bg-white result-search">
-            {data.length > 0 && (
-              <span>
-                Có {data.length} Bác sĩ được tìm thấy cho triệu chứng hoặc tên "
-                {keyword}"
-              </span>
-            )}
-            {data.length == 0 && (
-              <span>
-                Không tìm thấy Bác sĩ cho triệu chứng hoặc tên "{keyword}"
-              </span>
-            )}
-          </div>
-          <Divider></Divider>
-          <List
-            sx={{
-              width: "100%",
-              maxWidth: "100%",
-              bgcolor: "background.paper",
-              paddingBottom: "10px",
-            }}
-            style={{ borderRadius: "0px 0px 10px 10px" }}
-          >
-            {data.length > 0 &&
-              data.map((doctor) => {
-                return (
-                  <div key={doctor.id}>
-                    <Doctor props={doctor}></Doctor>
-                  </div>
-                );
-              })}
-          </List>
-        </div>
-      </section>
+      )}
+      {load && (
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      )}
       <Footer></Footer>
     </div>
   );
