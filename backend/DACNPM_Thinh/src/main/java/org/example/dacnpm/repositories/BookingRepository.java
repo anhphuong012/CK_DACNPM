@@ -21,10 +21,10 @@ public interface BookingRepository extends CrudRepository<Booking, Long> {
 	@Query("select b from Booking b where b.date = ?1 and b.time =?2 and b.doctor = ?3")
 	Booking findByDateAndTimeAndDoctor(Date date, String time, Doctor doctor);
 
-	@Query("select b from Booking b where b.patient.id = :pId and (status = 0 or b.date < :dateCurrent)")
+	@Query("select b from Booking b where b.patient.id = :pId and (status = 0 or b.date < :dateCurrent) order by b.id desc")
 	List<Booking> findBookingGone(@Param("pId") long pId, @Param("dateCurrent") Date dateCurrent);
 	
-	@Query("select b from Booking b where b.patient.id = :pId and status = 1 and b.date >= :dateCurrent")
+	@Query("select b from Booking b where b.patient.id = :pId and status = 1 and b.date >= :dateCurrent order by b.id desc")
 	List<Booking> findBookingAvailable(@Param("pId") long pId, @Param("dateCurrent") Date dateCurrent);
 	
 }
