@@ -33,6 +33,7 @@ export default function LoginPage() {
           var user = response.data.data.patient;
           sessionStorage.setItem("user", JSON.stringify(user));
           document.location.href = "/";
+        } else if (response.data.data.role == "admin") {
         } else {
           var user = response.data.data.doctor;
           sessionStorage.setItem("user", JSON.stringify(user));
@@ -40,6 +41,8 @@ export default function LoginPage() {
         }
       } else if (response.status == 204) {
         toast.error("Sai tài khoản hoặc mật khẩu");
+      } else if (response.status == 203) {
+        toast.error("Tài khoản đã bị khóa");
       } else {
         toast.error("Đã gặp lỗi");
       }

@@ -10,6 +10,9 @@ import ScheduleCancel from "./component/user/page/ScheduleCancel";
 import Profile from "./component/user/page/Profile";
 import ProfileDoctor from "./component/doctor/page/profileDoctor";
 import CreateCalendar from "./component/doctor/page/createCalendar";
+import ManagerUser from "./component/admin/ManagerUser/ManagerUser";
+import ManagerDoctor from "./component/admin/ManagerDoctor/ManagerDoctor";
+import AddDoctor from "./component/admin/ManagerDoctor/AddDoctor";
 
 import { Routes, Route } from "react-router-dom";
 
@@ -28,6 +31,9 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile-doctors" element={<ProfileDoctor />} />
         <Route path="/create-calendar" element={<CreateCalendar />} />
+        <Route path="/admin/manage-user" element={<ManagerUser />} />
+        <Route path="/admin/manage-doctor" element={<ManagerDoctor />} />
+        <Route path="/admin/manage-doctor/add" element={<AddDoctor />} />
       </Routes>
     </div>
   );

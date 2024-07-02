@@ -78,7 +78,7 @@ export default function Home() {
             alt="Card image"
           />
           <div class="card-body">
-            <h4 class="card-title author-card">{props.props.name}</h4>
+            <h4 class="card-title author-card">{props.props.fullName}</h4>
             <p class="text-sm text-des-card mr-b-2">{props.props.department}</p>
             <p class="text-sm  text-des-card">{props.props.placeOfwork}</p>
             <button
@@ -99,7 +99,7 @@ export default function Home() {
     <div>
       <Header />
 
-      <section className="bg-primary main-content  relative overflow-hidden">
+      <section className="bg-primary main-content-home  relative overflow-hidden">
         <div>
           <h1 className="title text-white">Ứng dụng đặt khám</h1>
           <div className="title-descreption">

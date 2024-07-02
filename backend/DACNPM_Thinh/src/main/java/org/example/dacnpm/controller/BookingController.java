@@ -156,6 +156,10 @@ public class BookingController {
 
 		PatientDTO result = PatientDTO.convert(patient);
 		result.setBookins(bookingResult);
+		
+		for (BookingReturnDTO bookingReturnDTO : bookingResult) {
+			System.out.println(bookingReturnDTO.getId() +"-"+ bookingReturnDTO.getDate());
+		}
 
 		return ResponseEntity.status(HttpStatus.OK).body(new ReposeOject("success", " Success", result.getBookins()));
 

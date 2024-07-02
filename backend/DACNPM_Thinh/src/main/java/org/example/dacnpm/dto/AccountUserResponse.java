@@ -8,6 +8,7 @@ public class AccountUserResponse {
 	private Long id;
 	private String username;
 	private String role;
+	private boolean status;
 	private PatientDTO patient;
 	
 	
@@ -63,12 +64,24 @@ public class AccountUserResponse {
 	public void setPatient(PatientDTO patient) {
 		this.patient = patient;
 	}
+	
+	public boolean isStatus() {
+		return status;
+	}
+
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+
 	public static AccountUserResponse convert(Account account) {
 		AccountUserResponse accountResult = new AccountUserResponse();
 		
 		accountResult.setId(account.getId());
 		accountResult.setUsername(account.getUsername());
 		accountResult.setRole(account.getRole());
+		accountResult.setStatus(account.isStatus());
 		
 		Patient entity = account.getPatient();
 		
