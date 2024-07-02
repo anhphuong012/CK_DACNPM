@@ -19,28 +19,9 @@ import { format, addDays, addMonths } from "date-fns";
 
 import "../css/schedule.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Schedule() {
   // const params = useParams();
@@ -49,23 +30,29 @@ export default function Schedule() {
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(true);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    fetchData(1);
+    fetchData();
   }, []);
 
-  const fetchData = (id) => {
+  const fetchData = () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
-    const fetchPromise = fetch(`/v1/booking/patient/${user.id}`);
+    if (user == null) {
+      navigate("/login");
+    } else {
+      const fetchPromise = fetch(`/v1/booking/patient/${user.id}`);
 
-    fetchPromise
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.data);
-        if (data.data != null) {
-          setData(data.data);
-          setLoad(false);
-        }
-      });
+      fetchPromise
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.data);
+          if (data.data != null) {
+            setData(data.data);
+            setLoad(false);
+          }
+        });
+    }
   };
 
   console.log(data);
@@ -81,15 +68,48 @@ export default function Schedule() {
     return format(addDays(myDate, 1), "dd-MM-yyyy");
   };
 
+  const getDateCurrent = () => {
+    const date = new Date();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    var myDate = new Date(
+      parseInt(date.getFullYear()),
+      parseInt(month),
+      parseInt(day)
+    );
+    return format(addDays(myDate, 0), "dd-MM-yyyy");
+  };
+
+  const cancel = async (id) => {
+    setLoad(true);
+    await axios({
+      method: "put",
+      url: `/v1/booking/cancel/${id}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(function (response) {
+      setLoad(false);
+      if (response.status == 200) {
+        // fetchData();
+        const newData = data.filter((item) => item.id !== id);
+        setData(newData);
+        toast.success("Hủy thành công!");
+      } else {
+        toast.error("Đã gặp lỗi");
+      }
+    });
+  };
+
   return (
     <div>
       <Header></Header>
       <section className="bg-gray pd-t-20">
         <div className="container bg-slate-100 pd-20 pd-b-40">
-          <h1 className="text-lg font-semibold mb-3">Lịch đã đặt</h1>
+          <h1 className="text-lg font-semibold mb-3">Lịch chưa/đang khám</h1>
           <div className="wrap__btn-cancel">
             <Link className="btn btn-outline-danger" to="/schedulecancel">
-              Lịch đã hủy
+              Lịch đã/hủy khám
             </Link>
           </div>
           <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
@@ -139,10 +159,23 @@ export default function Schedule() {
                           </TableCell>
                         )}
                         <TableCell align="left">
-                          <span class="badge bg-info">Đợi khám </span>
+                          {getDateCurrent() == convertData(item.date) ? (
+                            <span class="badge bg-info">Đang khám </span>
+                          ) : (
+                            <span class="badge bg-primary">Chưa khám </span>
+                          )}
                         </TableCell>
                         <TableCell align="left">
-                          <button className="btn btn-danger">Hủy Lịch</button>
+                          {getDateCurrent() != convertData(item.date) ? (
+                            <button
+                              onClick={() => cancel(item.id)}
+                              className="btn btn-danger"
+                            >
+                              Hủy Lịch
+                            </button>
+                          ) : (
+                            <></>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -151,6 +184,7 @@ export default function Schedule() {
             </Table>
           </TableContainer>
         </div>
+        <ToastContainer position="bottom-right" />
       </section>
       <Footer></Footer>
     </div>

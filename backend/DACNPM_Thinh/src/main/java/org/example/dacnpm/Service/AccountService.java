@@ -51,10 +51,12 @@ public class AccountService implements IAccountService {
 
 
 		if (account == null) {
+			System.out.println("==");
 			return null;
 		} else {
 			boolean check = PasswordEncryption.checkPassword( password,account.getPassword());
-			System.out.println(check);
+//			boolean check = true;
+//			System.out.println(check);
 			if (!check) {
 				return null;
 			} else {

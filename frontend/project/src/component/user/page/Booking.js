@@ -16,6 +16,7 @@ import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { format, addDays, addMonths } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import Alert from "@mui/material/Alert";
 
@@ -80,6 +81,8 @@ export default function Booking() {
 
   const [selectedButton, setSelectedButton] = useState(null);
 
+  const [load, setLoad] = useState(true);
+
   const params = useParams();
   const keyword = params.id;
 
@@ -135,6 +138,7 @@ export default function Booking() {
     if (response.status == 200) {
       if (response.data.data != null) {
         setData(response.data.data);
+        setLoad(false);
         console.log("change data");
       }
     }
@@ -153,6 +157,7 @@ export default function Booking() {
       const user = JSON.parse(sessionStorage.getItem("user"));
       const submit = async () => {
         const user = JSON.parse(sessionStorage.getItem("user"));
+        console.log(user);
         // const requestOptions = {
         //   method: "POST",
         //   headers: {
@@ -168,6 +173,9 @@ export default function Booking() {
         // fetch("/v1/booking/add", requestOptions)
         //   .then((response) => response.json())
         //   .then((data) => console.log(data));
+        const myDate = listDay[value].split("-");
+        const dateConvert = myDate[2] + "-" + myDate[1] + "-" + myDate[0];
+        console.log(dateConvert);
 
         const response = await fetch("/v1/booking/add", {
           method: "POST",
@@ -179,7 +187,7 @@ export default function Booking() {
           body: JSON.stringify({
             doctorId: keyword,
             patientId: user.id,
-            date: listDay[value],
+            date: dateConvert,
             time: selectedButton,
           }),
         });
@@ -323,61 +331,66 @@ export default function Booking() {
         </div>
       )}
 
-      <div className="bg-slate-100 pd-20">
-        <div role="presentation" className="container mb-3">
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link underline="hover" color="inherit" href="/">
-              Trang chủ
-            </Link>
-            <Typography color="text.primary">Bác sĩ</Typography>
-          </Breadcrumbs>
-        </div>
-        <section className="container relative pd-10 bg-white border-radius-main pd-b-20">
-          {data != [] && (
-            <div className="d-flex border-head ">
-              <div className="image-doctor p-10">
-                <img
-                  src={data.avatar}
-                  class="rounded-circle"
-                  alt="Cinque Terre"
-                ></img>
-              </div>
-              <div className="infor-doctor aligan-just">
-                <h1>
-                  {data.degree} Bác sĩ chuyên khoa {data.fullName}{" "}
-                </h1>
-                <div className="d-flex" style={{ alignItems: "center;" }}>
-                  <span className="text-sm text-gray-600 ">Chuyên khoa: </span>
-                  <span className="pd-10-l-r text-black font-medium">
-                    {data.department}
-                  </span>
+      {!load && (
+        <div className="bg-slate-100 pd-20">
+          <div role="presentation" className="container mb-3">
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link underline="hover" color="inherit" href="/">
+                Trang chủ
+              </Link>
+              <Typography color="text.primary">Bác sĩ</Typography>
+            </Breadcrumbs>
+          </div>
+          <section className="container relative pd-10 bg-white border-radius-main pd-b-20">
+            {data != [] && (
+              <div className="d-flex border-head ">
+                <div className="image-doctor p-10">
+                  <img
+                    src={data.avatar}
+                    class="rounded-circle"
+                    alt="Cinque Terre"
+                  ></img>
                 </div>
+                <div className="infor-doctor aligan-just">
+                  <h1>
+                    {data.degree} Bác sĩ chuyên khoa {data.fullName}{" "}
+                  </h1>
+                  <div className="d-flex" style={{ alignItems: "center;" }}>
+                    <span className="text-sm text-gray-600 ">
+                      Chuyên khoa:{" "}
+                    </span>
+                    <span className="pd-10-l-r text-black font-medium">
+                      {data.department}
+                    </span>
+                  </div>
 
-                <div
-                  className="d-flex"
-                  style={{ alignItems: "center;", paddingTop: "10px" }}
+                  <div
+                    className="d-flex"
+                    style={{ alignItems: "center;", paddingTop: "10px" }}
+                  >
+                    <span className="text-sm text-gray-600 ">
+                      Nơi công tác:{" "}
+                    </span>
+                    <span className="pd-10-l-r text-black font-medium">
+                      {data.placeOfwork}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <br />
+            <div className="time-register">
+              <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  variant="scrollable"
+                  scrollButtons
+                  allowScrollButtonsMobile
+                  aria-label="scrollable force tabs example"
                 >
-                  <span className="text-sm text-gray-600 ">Nơi công tác: </span>
-                  <span className="pd-10-l-r text-black font-medium">
-                    {data.placeOfwork}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <br />
-          <div className="time-register">
-            <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                variant="scrollable"
-                scrollButtons
-                allowScrollButtonsMobile
-                aria-label="scrollable force tabs example"
-              >
-                {/* {listDay != [] &&
+                  {/* {listDay != [] &&
                   listDay.map((day, index) => {
                     <div key={index}>
                       <Tab
@@ -389,236 +402,243 @@ export default function Booking() {
                     </div>;
                     console.log("Day:" + day);
                   })} */}
-                <Tab
-                  label={listDay != [] ? "Ngày " + listDay[0] : ""}
-                  className="mr-l-r-12"
-                  {...a11yProps(0)}
-                />
-                <Tab
-                  label={listDay != [] ? "Ngày " + listDay[1] : ""}
-                  className="mr-l-r-12"
-                  {...a11yProps(1)}
-                />
-                <Tab
-                  label={listDay != [] ? "Ngày " + listDay[2] : ""}
-                  className="mr-l-r-12"
-                  {...a11yProps(2)}
-                />
-                <Tab
-                  label={listDay != [] ? "Ngày " + listDay[3] : ""}
-                  className="mr-l-r-12"
-                  {...a11yProps(3)}
-                />
-                <Tab
-                  label={listDay != [] ? "Ngày " + listDay[4] : ""}
-                  className="mr-l-r-12"
-                  {...a11yProps(4)}
-                />
-                <Tab
-                  label={listDay != [] ? "Ngày " + listDay[5] : ""}
-                  className="mr-l-r-12"
-                  {...a11yProps(5)}
-                />
-                <Tab
-                  label={listDay != [] ? "Ngày " + listDay[6] : ""}
-                  className="mr-l-r-12"
-                  {...a11yProps(6)}
-                />
-              </Tabs>
-              {/** Chỗ này là Select button chọn thời gian
-               * Mỗi Tab Panel là đại diện cho một ngày
-               */}
-              <TabPanel value={value} index={0}>
-                <div className="choose-time">
-                  <div className="session">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi sáng</span>
+                  <Tab
+                    label={listDay != [] ? "Ngày " + listDay[0] : ""}
+                    className="mr-l-r-12"
+                    {...a11yProps(0)}
+                  />
+                  <Tab
+                    label={listDay != [] ? "Ngày " + listDay[1] : ""}
+                    className="mr-l-r-12"
+                    {...a11yProps(1)}
+                  />
+                  <Tab
+                    label={listDay != [] ? "Ngày " + listDay[2] : ""}
+                    className="mr-l-r-12"
+                    {...a11yProps(2)}
+                  />
+                  <Tab
+                    label={listDay != [] ? "Ngày " + listDay[3] : ""}
+                    className="mr-l-r-12"
+                    {...a11yProps(3)}
+                  />
+                  <Tab
+                    label={listDay != [] ? "Ngày " + listDay[4] : ""}
+                    className="mr-l-r-12"
+                    {...a11yProps(4)}
+                  />
+                  <Tab
+                    label={listDay != [] ? "Ngày " + listDay[5] : ""}
+                    className="mr-l-r-12"
+                    {...a11yProps(5)}
+                  />
+                  <Tab
+                    label={listDay != [] ? "Ngày " + listDay[6] : ""}
+                    className="mr-l-r-12"
+                    {...a11yProps(6)}
+                  />
+                </Tabs>
+                {/** Chỗ này là Select button chọn thời gian
+                 * Mỗi Tab Panel là đại diện cho một ngày
+                 */}
+                <TabPanel value={value} index={0}>
+                  <div className="choose-time">
+                    <div className="session">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi sáng</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourMoning}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
+                    <div className="session border-top">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi Chiều</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourAfternoon}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
                   </div>
-                  <ChooseTime
-                    listHour={hourMoning}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                  <div className="session border-top">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi Chiều</span>
-                  </div>
-                  <ChooseTime
-                    listHour={hourAfternoon}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                </div>
-              </TabPanel>
+                </TabPanel>
 
-              {/**Panel Ngày 2 */}
-              <TabPanel value={value} index={1}>
-                <div className="choose-time">
-                  <div className="session">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi sáng</span>
+                {/**Panel Ngày 2 */}
+                <TabPanel value={value} index={1}>
+                  <div className="choose-time">
+                    <div className="session">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi sáng</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourMoning}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
+                    <div className="session border-top">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi Chiều</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourAfternoon}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
                   </div>
-                  <ChooseTime
-                    listHour={hourMoning}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                  <div className="session border-top">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi Chiều</span>
-                  </div>
-                  <ChooseTime
-                    listHour={hourAfternoon}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                </div>
-              </TabPanel>
+                </TabPanel>
 
-              {/* Panel ngày 3*/}
-              <TabPanel value={value} index={2}>
-                <div className="choose-time">
-                  <div className="session">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi sáng</span>
+                {/* Panel ngày 3*/}
+                <TabPanel value={value} index={2}>
+                  <div className="choose-time">
+                    <div className="session">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi sáng</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourMoning}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
+                    <div className="session border-top">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi Chiều</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourAfternoon}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
                   </div>
-                  <ChooseTime
-                    listHour={hourMoning}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                  <div className="session border-top">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi Chiều</span>
-                  </div>
-                  <ChooseTime
-                    listHour={hourAfternoon}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                </div>
-              </TabPanel>
+                </TabPanel>
 
-              {/**Panel Ngày 4 */}
-              <TabPanel value={value} index={3}>
-                <div className="choose-time">
-                  <div className="session">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi sáng</span>
+                {/**Panel Ngày 4 */}
+                <TabPanel value={value} index={3}>
+                  <div className="choose-time">
+                    <div className="session">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi sáng</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourMoning}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
+                    <div className="session border-top">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi Chiều</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourAfternoon}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
                   </div>
-                  <ChooseTime
-                    listHour={hourMoning}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                  <div className="session border-top">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi Chiều</span>
-                  </div>
-                  <ChooseTime
-                    listHour={hourAfternoon}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                </div>
-              </TabPanel>
+                </TabPanel>
 
-              {/**Panel ngày 5 */}
-              <TabPanel value={value} index={4}>
-                <div className="choose-time">
-                  <div className="session">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi sáng</span>
+                {/**Panel ngày 5 */}
+                <TabPanel value={value} index={4}>
+                  <div className="choose-time">
+                    <div className="session">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi sáng</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourMoning}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
+                    <div className="session border-top">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi Chiều</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourAfternoon}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
                   </div>
-                  <ChooseTime
-                    listHour={hourMoning}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                  <div className="session border-top">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi Chiều</span>
+                </TabPanel>
+                {/**Panel ngày 6 */}
+                <TabPanel value={value} index={5}>
+                  <div className="choose-time">
+                    <div className="session">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi sáng</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourMoning}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
+                    <div className="session border-top">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi Chiều</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourAfternoon}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
                   </div>
-                  <ChooseTime
-                    listHour={hourAfternoon}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                </div>
-              </TabPanel>
-              {/**Panel ngày 6 */}
-              <TabPanel value={value} index={5}>
-                <div className="choose-time">
-                  <div className="session">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi sáng</span>
+                </TabPanel>
+                {/**Panel ngày 7 */}
+                <TabPanel value={value} index={6}>
+                  <div className="choose-time">
+                    <div className="session">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi sáng</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourMoning}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
+                    <div className="session border-top">
+                      <TodayIcon></TodayIcon>
+                      <span className="title-time">Buổi Chiều</span>
+                    </div>
+                    <ChooseTime
+                      listHour={hourAfternoon}
+                      listmMnute={minute}
+                      date={listDay[value]}
+                    ></ChooseTime>
                   </div>
-                  <ChooseTime
-                    listHour={hourMoning}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                  <div className="session border-top">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi Chiều</span>
-                  </div>
-                  <ChooseTime
-                    listHour={hourAfternoon}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                </div>
-              </TabPanel>
-              {/**Panel ngày 7 */}
-              <TabPanel value={value} index={6}>
-                <div className="choose-time">
-                  <div className="session">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi sáng</span>
-                  </div>
-                  <ChooseTime
-                    listHour={hourMoning}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                  <div className="session border-top">
-                    <TodayIcon></TodayIcon>
-                    <span className="title-time">Buổi Chiều</span>
-                  </div>
-                  <ChooseTime
-                    listHour={hourAfternoon}
-                    listmMnute={minute}
-                    date={listDay[value]}
-                  ></ChooseTime>
-                </div>
-              </TabPanel>
-            </Box>
-          </div>
-          {/** Button đặt khám bệnh. Nếu chưa chọn thời gian khám thì button sẽ bị disable */}
-          <div
-            className={`wrap_btn-booking-fixed container bg-white ${
-              fixed ? "btn-fixed" : "btn-relative"
-            }`}
-          >
-            <button
-              type="button"
-              className={`btn btn-primary ${
-                selectedButton == null ? "disabled" : ""
+                </TabPanel>
+              </Box>
+            </div>
+            {/** Button đặt khám bệnh. Nếu chưa chọn thời gian khám thì button sẽ bị disable */}
+            <div
+              className={`wrap_btn-booking-fixed container bg-white ${
+                fixed ? "btn-fixed" : "btn-relative"
               }`}
-              onClick={useHandleSubmit}
             >
-              Đặt khám ngay
-            </button>
-          </div>
-          <div
-            className="aligan-just mt-5 history pd-20"
-            style={{ padding: "30px" }}
-          >
-            <h1 className="text-lg font-semibold"> Giới thiệu</h1>
-            <p>{data.descreption}</p>
-          </div>
-        </section>
-      </div>
+              <button
+                type="button"
+                className={`btn btn-primary ${
+                  selectedButton == null ? "disabled" : ""
+                }`}
+                onClick={useHandleSubmit}
+              >
+                Đặt khám ngay
+              </button>
+            </div>
+            <div
+              className="aligan-just mt-5 history pd-20"
+              style={{ padding: "30px" }}
+            >
+              <h1 className="text-lg font-semibold"> Giới thiệu</h1>
+              <p>{data.descreption}</p>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {load && (
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      )}
       <Footer></Footer>
     </div>
   );
