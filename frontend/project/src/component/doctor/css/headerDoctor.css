@@ -1,0 +1,20 @@
+#header-doctor {
+    width: 100%;
+    padding: 20px 8%;
+    background-color: #ff2020;
+    /* background-color: #0d6efd; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo_header-img {
+    width: 50px;
+    height: auto;
+}
+
+#col_nav, .col_menu, .col_user {
+    display: flex;
+    flex-direction: row;
+}
+
