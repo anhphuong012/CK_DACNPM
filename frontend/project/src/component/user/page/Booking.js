@@ -17,10 +17,21 @@ import dayjs from "dayjs";
 import { format, addDays, addMonths } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import Modal from "@mui/material/Modal";
 
 import Alert from "@mui/material/Alert";
 
 import axios from "axios";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -72,6 +83,8 @@ export default function Booking() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const [dateChoose, setDateChoose] = useState(new Date());
+
+  const [submit, setSubmit] = useState(false);
 
   const navigate = useNavigate();
 
@@ -144,6 +157,7 @@ export default function Booking() {
     }
   };
 
+  console.log(data);
   //Xử lí sự kiện khi bấm đặt lịch khám
   const useHandleSubmit = () => {
     let valueBtn = selectedButton;
@@ -177,6 +191,8 @@ export default function Booking() {
         const dateConvert = myDate[2] + "-" + myDate[1] + "-" + myDate[0];
         console.log(dateConvert);
 
+        setSubmit(true);
+
         const response = await fetch("/v1/booking/add", {
           method: "POST",
           headers: {
@@ -198,10 +214,13 @@ export default function Booking() {
           const returnData = result.data;
           console.log(returnData);
           // document.location.href = "/schedule";
+          setSubmit(false);
           navigate("/schedule");
         } else if ((result.status = "failed")) {
           setIsError(true);
           setSelectedButton(null);
+          setSubmit(false);
+          fetchData(keyword);
         }
       };
 
@@ -279,6 +298,8 @@ export default function Booking() {
     window.addEventListener("scroll", handlSRoll);
   }, []);
 
+  console.log(format(addDays(dateChoose, 1), "yyyy-MM-dd"));
+
   //Trả về component danh sách thời gian
   const ChooseTime = (props) => {
     console.log(props);
@@ -296,7 +317,8 @@ export default function Booking() {
                    data.bookings.map((value) => {
                      if (
                        value.time == hour + ":" + minute &&
-                       format(dateChoose, "dd-MM-yyyy") == value.date
+                       format(addDays(dateChoose, 1), "yyyy-MM-dd") ==
+                         value.date
                      ) {
                        console.log(hour + ":" + minute + " disabled ");
                        return " disabled ";
@@ -635,10 +657,24 @@ export default function Booking() {
       )}
 
       {load && (
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
         </Box>
       )}
+
+      <Modal
+        open={submit}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{ style }}>
+          {/* <CircularProgress /> */}
+
+          <Box sx={style}>
+            <CircularProgress />
+          </Box>
+        </Box>
+      </Modal>
       <Footer></Footer>
     </div>
   );

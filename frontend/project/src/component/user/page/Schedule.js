@@ -59,26 +59,29 @@ export default function Schedule() {
 
   const convertData = (date) => {
     var convert = date.split("-");
+    console.log(convert);
 
     var myDate = new Date(
-      parseInt(convert[2]),
-      parseInt(convert[1]),
-      parseInt(convert[0])
+      parseInt(convert[0]),
+      parseInt(convert[1] - 1),
+      parseInt(convert[2])
     );
-    return format(addDays(myDate, 1), "dd-MM-yyyy");
+    return format(addDays(myDate, 0), "dd-MM-yyyy");
   };
 
   const getDateCurrent = () => {
     const date = new Date();
-    const month = date.getMonth() + 1;
+    const month = date.getMonth();
     const day = date.getDate();
     var myDate = new Date(
       parseInt(date.getFullYear()),
       parseInt(month),
       parseInt(day)
     );
+    console.log("Current:" + format(addDays(myDate, 0), "dd-MM-yyyy"));
     return format(addDays(myDate, 0), "dd-MM-yyyy");
   };
+  console.log(data);
 
   const cancel = async (id) => {
     setLoad(true);
