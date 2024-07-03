@@ -8,6 +8,7 @@ public class AccountDoctorResponse {
 	private Long id;
 	private String username;
 	private String role;
+	private boolean status;
 	private DoctorDTO doctor;
 	
 	public AccountDoctorResponse() {
@@ -55,16 +56,27 @@ public class AccountDoctorResponse {
 	}
 	
 	
+	
+	
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
 	public static AccountDoctorResponse convert(Account account) {
 		AccountDoctorResponse accountDoctorResponse = new AccountDoctorResponse();
 		accountDoctorResponse.setId(account.getId());
 		accountDoctorResponse.setUsername(account.getUsername());
 		accountDoctorResponse.setRole(account.getRole());
+		accountDoctorResponse.setStatus(account.isStatus());
 		
 		Doctor doctor = account.getDoctor();
-		DoctorDTO doctorDTO = new DoctorDTO(doctor.getId(), doctor.getFullName(), doctor.getAvatar(), doctor.getEmail(), doctor.getEmail(), doctor.getDescreption(), doctor.getDepartment().getName(), doctor.getPlaceOfwork());
+//		DoctorDTO doctorDTO = new DoctorDTO(doctor.getId(), doctor.getFullName(), doctor.getAvatar(), doctor.getEmail(), doctor.getEmail(), doctor.getDescreption(), doctor.getDepartment().getName(), doctor.getPlaceOfwork());
 		
-		accountDoctorResponse.setDoctor(doctorDTO);
+		accountDoctorResponse.setDoctor(DoctorDTO.convert(doctor));
 		return accountDoctorResponse;
 		
 	}

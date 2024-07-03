@@ -1,0 +1,50 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.container-main {
+    display: flex;
+}
+
+.main-content {
+    margin-top: 8%;
+    width: 100%;
+
+    padding: 10px;
+    height: 100%;
+}
+
+.image-product {
+    max-width: 40px;
+    min-height: 40px;
+}
+
+.wrap-btn-add {
+    text-align: end;
+    margin-right: 20px;
+}
+
+.title-manager {
+    color: #000;
+    font-weight: 700;
+}
+
+.form-add {
+    margin-top: 40px;
+    text-align: -webkit-center;
+}
+
+.container-form-search {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 10px;
+}
+
+.active-nav {
+    color: #4e73df;
+}
+.bg-white {
+    background-color: #fff !important;
+}

@@ -13,6 +13,10 @@ import ProfileDoctor from "./component/doctor/page/profileDoctor";
 import CreateCalendar from "./component/doctor/page/createCalendar";
 import WatchCalendar from "./component/doctor/page/watchCalendar";
 
+import ManagerUser from "./component/admin/ManagerUser/ManagerUser";
+import ManagerDoctor from "./component/admin/ManagerDoctor/ManagerDoctor";
+import AddDoctor from "./component/admin/ManagerDoctor/AddDoctor";
+
 import { Routes, Route } from "react-router-dom";
 
 function App() {
@@ -32,6 +36,9 @@ function App() {
         <Route path="/profile-doctors" element={<ProfileDoctor />} />
         <Route path="/create-calendar" element={<CreateCalendar />} />
         <Route path="/watch-calendar" element={<WatchCalendar />} />
+        <Route path="/admin/manage-user" element={<ManagerUser />} />
+        <Route path="/admin/manage-doctor" element={<ManagerDoctor />} />
+        <Route path="/admin/manage-doctor/add" element={<AddDoctor />} />
       </Routes>
     </div>
   );
