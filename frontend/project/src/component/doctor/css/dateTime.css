@@ -1,0 +1,26 @@
+.date {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    /* flex-direction: column-reverse; */
+    flex-direction: column;
+    background-color: #ff2626;;
+    border-radius: 15px;
+    padding: 15px 30px;
+}
+
+.date p {
+    margin-bottom: 0;
+    color: #fff;
+    font-weight: 500;
+}
+
+.date_format-text {
+    font-size: 20px;
+}
+
+.date_time-text {
+    font-size: 30px;
+    text-align: center;
+}
+

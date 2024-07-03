@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #ffc20a;
+    --success-color: #15d200;
+    --danger-color: #e60000;
+    --text-color: #676767;
+    --font-family: "Roboto", sans-serif;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#blk_container-doctor {
+    width: 100%;
+    min-height: 100vh;
+    margin-top: -20px;
+    background-color: #fff;
+    font-family: var(--font-family);
+    overflow-x: hidden;
+}
+
+#container-doctor {
+    width: 100%;
+    min-height: 100%;
+    background-color: #fff;
+    padding-bottom: 20px;
+}
+
+.bgr {
+    width: 100%;
+    height: 30rem;
+    overflow: hidden;
+    background-image: url('../img/bgr1.png');
+    background-size: cover;
+    padding: 0 8% 0 5%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.bgr_img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
+.bgr_img-doctor {
+    width: 42rem;
+    height: 90%;
+}
+
+.slogan {
+    min-width: max-content;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    margin-top: 1%;
+}
+
+.slogan_text {
+    font-family: var(--font-family);
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #fff;
+}
+
+.slogan_text-big {
+    font-size: 55px;
+    text-shadow: 1px 1px 7px #000;
+}
+
+.slogan_text-small {
+    font-size: 45px;
+    text-align: left;
+    text-shadow: 1px 1px 5px #000;
+}
+
+#container-content {
+    width: 100%;
+    min-height: 100%;
+}
+
+.row_meBo {
+    width: 100%;
+    margin-top: 24px;
+    margin-left: 4%;
+}
+
+.rowMeBo {
+    width: 93%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rowMeBo_dateTime {
+    margin-top: -6.5%;
+}
+
+.rowMeBo_title-text {
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.rowMeBo_block {
+    width: 90%;
+}
+
+.nextSchedule {
+    border: 3px solid var(--primary-color);
+}
+
+.rowMeBo_block-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 5%;
+    margin-bottom: 5px;
+}
+
+.meBo_list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 25px;
+    column-gap: 50px;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.meBo_list-item {
+    width: 100%;
+    height: auto;
+    padding: 10px 25px 15px 25px;
+    border-radius: 10px;
+    border: 3px solid var(--secondary-color);
+    box-shadow: 2px 2px 5px var(--text-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    flex-direction: column;
+    background-color: #fff;
+}
+
+.meBo_item-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.meBo_items {
+    display: flex;
+    flex-direction: row;
+}
+
+.meBo-date, .meBo-time, .meBo-namePatients, .meBo_blk-status, .meBo-numberPhone {
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.meBo-text {
+    font-size: 20px;    
+}
+
+.text-notMargin {
+    margin-bottom: 0;
+}
+
+.meBo_blk {
+    margin-right: 0;
+}
+
+.meBo_items-status {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+    background-color: #15d200;
+    border-radius: 5px;
+}
+
+.btn_status {
+    font-size: 18px;
+    text-align: center;
+    padding: 7px 20px;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.btn_status-order {
+    background-color: var(--success-color);
+}
+
+.btn_status-cancel {
+    background-color: var(--danger-color);
+    display: none;
+}
+
+
+.btn_meBo {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+.btn_meBo-seeMore {
+    color: #fff;
+    font-size: 20px;
+    padding: 8px 24px;
+    border: 1px solid var(--primary-color);
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn_meBo-seeMore:hover {
+    background-color: #0d5fda;
+    border: 1px solid #0d5fda;
+}

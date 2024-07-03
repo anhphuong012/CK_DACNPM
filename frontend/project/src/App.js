@@ -8,8 +8,10 @@ import Booking from "./component/user/page/Booking";
 import Schedule from "./component/user/page/Schedule";
 import ScheduleCancel from "./component/user/page/ScheduleCancel";
 import Profile from "./component/user/page/Profile";
+import HomeDoctor from "./component/doctor/page/HomeDoctor";
 import ProfileDoctor from "./component/doctor/page/profileDoctor";
 import CreateCalendar from "./component/doctor/page/createCalendar";
+import WatchCalendar from "./component/doctor/page/watchCalendar";
 
 import { Routes, Route } from "react-router-dom";
 
@@ -26,8 +28,10 @@ function App() {
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/schedulecancel" element={<ScheduleCancel />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/home" element={<HomeDoctor />}></Route>
         <Route path="/profile-doctors" element={<ProfileDoctor />} />
         <Route path="/create-calendar" element={<CreateCalendar />} />
+        <Route path="/watch-calendar" element={<WatchCalendar />} />
       </Routes>
     </div>
   );
