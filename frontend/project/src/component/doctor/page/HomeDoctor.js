@@ -81,6 +81,20 @@ function HomeDoctor() {
       phone: '0379383465',
       status: 'Đã bị hủy',
     },
+    {
+      date: '03/07/2024',
+      time: '7:04',
+      patientName: 'Trần Lộc',
+      phone: '0379383465',
+      status: 'Đã bị hủy',
+    },
+    {
+      date: '03/07/2024',
+      time: '7:04',
+      patientName: 'Trần Lộc',
+      phone: '0379383465',
+      status: 'Đã bị hủy',
+    },
     
   ];
 
