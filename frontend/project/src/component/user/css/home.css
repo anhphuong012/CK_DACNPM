@@ -23,7 +23,7 @@
 
 
 
-.main-content {
+.main-content-home {
     min-height: 520px;
     display: flex;
     padding-left: 1.5rem;
@@ -147,6 +147,7 @@
     margin-bottom: 30px;
     display: flex;
     overflow-x: auto;
+    padding-bottom: 15px;
 }
 .author-card{
     text-underline-offset: 2px !important;
