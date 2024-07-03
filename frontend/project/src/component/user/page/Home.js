@@ -113,7 +113,7 @@ export default function Home() {
         <div div="wrap-search" style={{ minWidth: "70%" }}>
           <div class="input-group input-group-lg relative">
             <input
-              placeholder="Nhập triệu chứng,tên bác sĩ .."
+              placeholder="Nhập triệu chứng, tên bác sĩ..."
               type="text"
               class="form-control search"
               value={inputValue}
