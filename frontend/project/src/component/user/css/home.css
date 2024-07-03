@@ -147,6 +147,7 @@
     margin-bottom: 30px;
     display: flex;
     overflow-x: auto;
+    padding-bottom: 15px;
 }
 .author-card{
     text-underline-offset: 2px !important;
