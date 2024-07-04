@@ -34,6 +34,10 @@ export default function LoginPage() {
           sessionStorage.setItem("user", JSON.stringify(user));
           document.location.href = "/";
         } else if (response.data.data.role == "admin") {
+        } else if (response.data.data.role == "doctor") {
+          var user = response.data.data.patient;
+          sessionStorage.setItem("doctor", JSON.stringify(user));
+          document.location.href = "/home";
         } else {
           var user = response.data.data.doctor;
           sessionStorage.setItem("user", JSON.stringify(user));
