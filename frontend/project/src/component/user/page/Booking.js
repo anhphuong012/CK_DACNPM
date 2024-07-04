@@ -198,6 +198,9 @@ export default function Booking() {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage
+              .getItem("token")
+              .toString()}`,
           },
           mode: "cors",
           body: JSON.stringify({

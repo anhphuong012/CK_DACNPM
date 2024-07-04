@@ -41,9 +41,9 @@ export default function HeaderAdmin() {
         id="accordionSidebar"
       >
         {/* Sidebar - Brand */}
-        <a
+        <Link
           className="sidebar-brand d-flex align-items-center justify-content-center"
-          href="index.html"
+          to="/admin/manage-user"
         >
           <div className="sidebar-brand-icon rotate-n-15">
             <i className="fas fa-laugh-wink" />
@@ -51,7 +51,7 @@ export default function HeaderAdmin() {
           <div className="sidebar-brand-text mx-3">
             SB Admin <sup>2</sup>
           </div>
-        </a>
+        </Link>
         {/* Divider */}
         {/* <hr className="sidebar-divider my-0" /> */}
         {/* Nav Item - Infor */}

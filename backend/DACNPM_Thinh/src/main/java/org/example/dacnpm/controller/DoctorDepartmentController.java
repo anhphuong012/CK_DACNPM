@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +40,9 @@ public class DoctorDepartmentController {
 
 	@GetMapping(path = "/search")
 	public @ResponseBody ResponseEntity<ReposeOject> findDoctorBySick(@RequestParam String sick) {
-
+		var context = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println("UserName:" + context.getName());
+		System.out.println("Roles:" + context.getAuthorities().toString());
 		if (!sick.equals("")) {
 			Sick findSick = sickRepository.findByName(sick);
 

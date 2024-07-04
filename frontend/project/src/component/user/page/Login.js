@@ -9,10 +9,13 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import Login_pan from "../img/login_pan.png";
 import "axios";
+
 export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const login = async () => {
     await axios({
@@ -29,13 +32,15 @@ export default function LoginPage() {
     }).then(function (response) {
       console.log(response);
       if (response.status == 200) {
-        if (response.data.data.role == "user") {
-          var user = response.data.data.patient;
+        sessionStorage.setItem("token", response.data.data.token);
+        if (response.data.data.user.role == "user") {
+          var user = response.data.data.user.patient;
           sessionStorage.setItem("user", JSON.stringify(user));
           document.location.href = "/";
-        } else if (response.data.data.role == "admin") {
+        } else if (response.data.data.user.role == "admin") {
+          navigate("/admin/manage-user");
         } else {
-          var user = response.data.data.doctor;
+          var user = response.data.data.user.doctor;
           sessionStorage.setItem("user", JSON.stringify(user));
           document.location.href = "/profile-doctors";
         }
