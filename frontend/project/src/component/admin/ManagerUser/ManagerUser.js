@@ -102,13 +102,11 @@ export default function ManagerUser() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/v1/account/users");
-      // ,
-      //   {
-      //   headers: {
-      //     Authorization: `Bearer ${sessionStorage.getItem("token").toString()}`,
-      //   },
-      // }
+      const response = await axios.get("/v1/account/users", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token").toString()}`,
+        },
+      });
 
       if (response.status === 200) {
         if (response.data.data != null) {
@@ -127,7 +125,10 @@ export default function ManagerUser() {
       setData(temp);
     } else {
       const updateData = temp.filter((user) =>
-        user.patient.fullName.toLowerCase().includes(value.toLowerCase())
+        user.patient.fullName
+          .trim()
+          .toLowerCase()
+          .includes(value.trim().toLowerCase())
       );
       setData(updateData);
     }

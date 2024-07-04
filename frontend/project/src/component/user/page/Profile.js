@@ -51,7 +51,11 @@ export default function Profile() {
     async function updatePost() {
       const requestOptions = {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token").toString()}`,
+        },
+
         body: JSON.stringify({
           fullName: name,
           sex: sex,

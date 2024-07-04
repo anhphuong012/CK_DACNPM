@@ -90,6 +90,7 @@ export default function Schedule() {
       url: `/v1/booking/cancel/${id}`,
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token").toString()}`,
       },
     }).then(function (response) {
       setLoad(false);

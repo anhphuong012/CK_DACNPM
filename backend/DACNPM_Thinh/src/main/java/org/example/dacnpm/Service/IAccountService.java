@@ -1,5 +1,6 @@
 package org.example.dacnpm.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.example.dacnpm.dto.AccountDoctorResponse;
@@ -15,7 +16,7 @@ public interface IAccountService {
 	List<AccountDoctorResponse> findAllDoctor();
 	boolean changeStatusAccount(Long id,String type);
 	AccountDoctorResponse registerDoctor(RegisterDoctorAccount doctor,MultipartFile file);
-	
+	boolean deleteDoctor(Long id) throws IOException;
 	
 
 }

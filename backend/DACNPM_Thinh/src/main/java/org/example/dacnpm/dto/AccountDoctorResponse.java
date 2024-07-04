@@ -3,7 +3,7 @@ package org.example.dacnpm.dto;
 import org.example.dacnpm.model.Account;
 import org.example.dacnpm.model.Doctor;
 
-public class AccountDoctorResponse {
+public class AccountDoctorResponse  {
 	
 	private Long id;
 	private String username;

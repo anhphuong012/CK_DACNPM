@@ -48,7 +48,7 @@ export default function AddDoctor() {
     { id: 1, name: "BS" },
     { id: 2, name: "GS" },
     { id: 3, name: "PGS" },
-    { id: 4, name: "Ts" },
+    { id: 4, name: "TS" },
   ]);
 
   const [department, setDepartment] = useState(null);
@@ -105,7 +105,7 @@ export default function AddDoctor() {
     "fullName":"${name}",
     "avatar":"",
     "email":"${email}",
-    "degree":"${degree[selectDegree].name}",
+    "degree":"${degree[selectDegree - 1].name}",
     "descreption":"${descreption}",
     "department":"${selectDeparment}",
     "placeOfwork":"${place}"
@@ -123,7 +123,7 @@ export default function AddDoctor() {
 
         headers: {
           "Content-Type": `multipart/form-data boundary=${formData._boundary}`,
-          // Authorization: `Bearer ${sessionStorage.getItem("token").toString()}`,
+          Authorization: `Bearer ${sessionStorage.getItem("token").toString()}`,
         },
         mode: "cors",
         data: formData,

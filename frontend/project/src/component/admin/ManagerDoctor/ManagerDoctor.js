@@ -14,9 +14,9 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { auto, end, right } from "@popperjs/core";
 
-import LockIcon from "@mui/icons-material/Lock";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
+
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -64,6 +64,7 @@ export default function ManagerDoctor() {
   const [temp, setTemp] = useState(null);
 
   const [show, setShow] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
   const [selectDelete, setSelectDelete] = useState(null);
   const [isLoad, setIsLoad] = useState(false);
@@ -74,6 +75,8 @@ export default function ManagerDoctor() {
   const [value, setValue] = useState("");
 
   const handleClose = () => setShow(false);
+  const handleDeleteClose = () => setShowDelete(false);
+
   const handleShow = (selectShow) => {
     setShow(true);
     setSelectShow(selectShow);
@@ -92,14 +95,11 @@ export default function ManagerDoctor() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/v1/account/doctors");
-      // ,
-      //   {
-      //   headers: {
-      //     Authorization: `Bearer ${sessionStorage.getItem("token").toString()}`,
-      //   },
-      // }
-
+      const response = await axios.get("/v1/account/doctors", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token").toString()}`,
+        },
+      });
       if (response.status === 200) {
         if (response.data.data != null) {
           setData(response.data.data);
@@ -109,8 +109,39 @@ export default function ManagerDoctor() {
       }
     } catch (error) {
       console.log(error);
-      //   navigate("/login");
+      navigate("/login");
     }
+  };
+
+  const handleDelete = async () => {
+    console.log("ID:" + selectDelete.id);
+    await axios({
+      method: "delete",
+      maxBodyLength: Infinity,
+      url: "v1/account/doctor/" + selectDelete.id,
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token").toString()}`,
+      },
+      data: "",
+    }).then(function (response) {
+      console.log(response);
+      if (response.status == 200) {
+        if (response.data.data == true) {
+          const updatedDoctors = temp.filter(
+            (acc) => acc.id !== selectDelete.id
+          );
+          setData(updatedDoctors);
+          setTemp(updatedDoctors);
+
+          toast.success("Xóa Sản Phẩm Thành Công!", {
+            className: "Thông báo",
+          });
+        } else {
+          toast.error("Đã xảy ra lỗi");
+        }
+        setShow(false);
+      }
+    });
   };
 
   useEffect(() => {
@@ -118,7 +149,10 @@ export default function ManagerDoctor() {
       setData(temp);
     } else {
       const updateData = temp.filter((user) =>
-        user.doctor.fullName.toLowerCase().includes(value.toLowerCase())
+        user.doctor.fullName
+          .trim()
+          .toLowerCase()
+          .includes(value.trim().toLowerCase())
       );
       setData(updateData);
     }
@@ -249,6 +283,17 @@ export default function ManagerDoctor() {
                               >
                                 <RemoveRedEyeIcon></RemoveRedEyeIcon>
                               </button>
+
+                              {/* <button
+                                className={"btn btn-danger mr-2"}
+                                title="Xóa"
+                                onClick={() => {
+                                  setShowDelete(true);
+                                  setSelectDelete(row);
+                                }}
+                              >
+                                <DeleteIcon></DeleteIcon>
+                              </button> */}
                             </TableCell>
                           </TableRow>
                         );
@@ -330,6 +375,26 @@ export default function ManagerDoctor() {
               <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                   Trở Lại
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          )}
+
+          {selectDelete != null && (
+            <Modal show={showDelete} onHide={handleDeleteClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Xóa Bác Sĩ</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Bạn Có Chắn Chắc Muốn Xóa Bác Sĩ "{selectDelete.doctor.fullName}{" "}
+                " Không ?
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleDeleteClose}>
+                  Trở Lại
+                </Button>
+                <Button variant="danger" onClick={handleDelete}>
+                  Xóa
                 </Button>
               </Modal.Footer>
             </Modal>

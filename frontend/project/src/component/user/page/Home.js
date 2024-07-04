@@ -67,6 +67,7 @@ export default function Home() {
     setSearch(null);
   };
 
+  console.log(JSON.parse(sessionStorage.getItem("user")));
   //Component thông tin bác sĩ ở trang Home
   const Card = (props) => {
     return (
