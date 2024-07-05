@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import HeaderDoctor from './HeaderDoctor';
 import FooterDoctor from '../../user/page/Footer';
 import '../css/homeDoctor.css';
 import BrgDoctor from '../img/bgr2.png';
 import DateTime from './DateTime';
+import axios from 'axios';
+import { format } from 'date-fns';
 
 const AppointmentItem = ({ date, time, patientName, phone, status }) => (
   <li className='meBo_list-item'>
     <div className='meBo_item-left'>
       <div className='meBo_items'>
         <p className='meBo-date meBo-text text-notMargin'>Ngày hẹn:</p>
-        <p className='meBo_date-text meBo-text text-notMargin'>{date}</p>
+        <p className='meBo_date-text meBo-text text-notMargin'>{format(new Date(date), 'dd/MM/yyyy')}</p>
       </div>
       <div className='meBo_items'>
         <p className='meBo-time meBo-text text-notMargin'>Thời gian hẹn:</p>
@@ -38,81 +40,43 @@ const AppointmentItem = ({ date, time, patientName, phone, status }) => (
 
 function HomeDoctor() {
   const [visibleRows, setVisibleRows] = useState(2);
-  const appointments = [
-    {
-      date: '03/07/2024',
-      time: '7:04',
-      patientName: 'Trần Lộc',
-      phone: '0379383465',
-      status: 'Đã đặt',
-    },
-    {
-      date: '03/07/2024',
-      time: '7:04',
-      patientName: 'Trần Lộc',
-      phone: '0379383465',
-      status: 'Đã bị hủy',
-    },
-    {
-      date: '03/07/2024',
-      time: '7:04',
-      patientName: 'Trần Lộc',
-      phone: '0379383465',
-      status: 'Đã bị hủy',
-    },
-    {
-      date: '03/07/2024',
-      time: '7:04',
-      patientName: 'Trần Lộc',
-      phone: '0379383465',
-      status: 'Đã bị hủy',
-    },
-    {
-      date: '03/07/2024',
-      time: '7:04',
-      patientName: 'Trần Lộc',
-      phone: '0379383465',
-      status: 'Đã bị hủy',
-    },
-    {
-      date: '03/07/2024',
-      time: '7:04',
-      patientName: 'Trần Lộc',
-      phone: '0379383465',
-      status: 'Đã bị hủy',
-    },
-    {
-      date: '03/07/2024',
-      time: '7:04',
-      patientName: 'Trần Lộc',
-      phone: '0379383465',
-      status: 'Đã bị hủy',
-    },
-    {
-      date: '03/07/2024',
-      time: '7:04',
-      patientName: 'Trần Lộc',
-      phone: '0379383465',
-      status: 'Đã bị hủy',
-    },
-    
-  ];
+  const [appointments, setAppointments] = useState([]);
+
+  const doctorId = 3; // Thay đổi ID bác sĩ tương ứng
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const response = await axios.get(`/v1/booking/doctor/${doctorId}`);
+        if (response.data.status === 'success') {
+          const currentDateTime = new Date();
+          const validAppointments = response.data.data.bookings.filter(appointment => {
+            const appointmentDateTime = new Date(`${appointment.date} ${appointment.time}`);
+            return appointmentDateTime > currentDateTime;
+          });
+          setAppointments(validAppointments);
+        }
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
+
+    fetchAppointments();
+  }, [doctorId]);
 
   const handleShowMore = () => {
-    if (visibleRows < appointments.length / 3) {
+    if (visibleRows * 3 < appointments.length) {
       setVisibleRows(visibleRows + 2);
-    } else {
-      window.location.href = '/watch';
     }
   };
 
   return (
     <div id='blk_container-doctor'>
-      <HeaderDoctor/>
+      <HeaderDoctor />
       <div id='container-doctor'>
         <div className='bgr'>
           <div className='bgr_img'>
-            <img src={BrgDoctor} alt='ảnh nền' className='bgr_img-doctor'/>
+            <img src={BrgDoctor} alt='ảnh nền' className='bgr_img-doctor' />
           </div>
           <div className='slogan'>
             <p className='slogan_text-big slogan_text'>Tạo lịch khám dễ dàng,</p>
@@ -128,34 +92,40 @@ function HomeDoctor() {
                 </p>
               </a>
               <div className='rowMeBo_dateTime'>
-                <DateTime/>
+                <DateTime />
               </div>
             </div>
             <div className='rowMeBo_block'>
               <div className='rowMeBo_block-list'>
                 <ul className='meBo_list'>
-                  {appointments.slice(0, visibleRows * 3).map((appointment, index) => (
-                    <AppointmentItem
-                      key={index}
-                      date={appointment.date}
-                      time={appointment.time}
-                      patientName={appointment.patientName}
-                      phone={appointment.phone}
-                      status={appointment.status}
-                    />
-                  ))}
+                  {appointments.length === 0 ? (
+                    <p className='no-appointments'>Không có lịch hẹn nào</p>
+                  ) : (
+                    appointments.slice(0, visibleRows * 3).map((appointment, index) => (
+                      <AppointmentItem
+                        key={appointment.id}
+                        date={appointment.date}
+                        time={appointment.time}
+                        patientName={appointment.patient.fullName}
+                        phone={appointment.patient.phoneNumber}
+                        status={appointment.status === 1 ? 'Đã đặt' : 'Đã bị hủy'}
+                      />
+                    ))
+                  )}
                 </ul>
-                <div className='btn_meBo'>
-                  <button className='btn_meBo-seeMore' onClick={handleShowMore}>
-                    Xem thêm
-                  </button>
-                </div>
+                {visibleRows * 3 < appointments.length && (
+                  <div className='btn_meBo'>
+                    <button className='btn_meBo-seeMore' onClick={handleShowMore}>
+                      Xem thêm
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
-      <FooterDoctor/>
+      <FooterDoctor />
     </div>
   );
 }

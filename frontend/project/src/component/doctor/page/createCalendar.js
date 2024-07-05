@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Header from "./Header";
+import Header from "./HeaderDoctor";
 import "../css/calendar.css";
 import "../css/createCalendar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
