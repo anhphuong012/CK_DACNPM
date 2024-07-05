@@ -232,7 +232,7 @@ export default function Booking() {
       navigate("/login");
     }
 
-    console.log(listDay[value] + " " + valueBtn + ":00");
+    console.log(listDay[value] + "" + valueBtn + ":00");
   };
 
   //Lay data
@@ -319,9 +319,9 @@ export default function Booking() {
                    data.bookings != undefined &&
                    data.bookings.map((value) => {
                      if (
-                       value.time == hour + ":" + minute &&
-                       format(addDays(dateChoose, 1), "yyyy-MM-dd") ==
-                         value.date
+                        value.time == hour + ":" + minute &&
+                        format(addDays(dateChoose, 1), "yyyy-MM-dd") ==
+                          value.date
                      ) {
                        console.log(hour + ":" + minute + " disabled ");
                        return " disabled ";
@@ -333,7 +333,7 @@ export default function Booking() {
                  `}
                 onClick={() => handleButtonClick(hour + ":" + minute)}
               >
-                {hour} : {minute} -{" "}
+                {hour} : {minute} - {" "}
                 {minute == "45"
                   ? (parseInt(hour) + 1).toString() + " : 00"
                   : hour + " : " + (parseInt(minute) + 15).toString()}
@@ -479,7 +479,7 @@ export default function Booking() {
                     ></ChooseTime>
                     <div className="session border-top">
                       <TodayIcon></TodayIcon>
-                      <span className="title-time">Buổi Chiều</span>
+                      <span className="title-time">Buổi chiều</span>
                     </div>
                     <ChooseTime
                       listHour={hourAfternoon}
@@ -503,7 +503,7 @@ export default function Booking() {
                     ></ChooseTime>
                     <div className="session border-top">
                       <TodayIcon></TodayIcon>
-                      <span className="title-time">Buổi Chiều</span>
+                      <span className="title-time">Buổi chiều</span>
                     </div>
                     <ChooseTime
                       listHour={hourAfternoon}
@@ -527,7 +527,7 @@ export default function Booking() {
                     ></ChooseTime>
                     <div className="session border-top">
                       <TodayIcon></TodayIcon>
-                      <span className="title-time">Buổi Chiều</span>
+                      <span className="title-time">Buổi chiều</span>
                     </div>
                     <ChooseTime
                       listHour={hourAfternoon}
@@ -551,7 +551,7 @@ export default function Booking() {
                     ></ChooseTime>
                     <div className="session border-top">
                       <TodayIcon></TodayIcon>
-                      <span className="title-time">Buổi Chiều</span>
+                      <span className="title-time">Buổi chiều</span>
                     </div>
                     <ChooseTime
                       listHour={hourAfternoon}
@@ -575,7 +575,7 @@ export default function Booking() {
                     ></ChooseTime>
                     <div className="session border-top">
                       <TodayIcon></TodayIcon>
-                      <span className="title-time">Buổi Chiều</span>
+                      <span className="title-time">Buổi chiều</span>
                     </div>
                     <ChooseTime
                       listHour={hourAfternoon}
@@ -598,7 +598,7 @@ export default function Booking() {
                     ></ChooseTime>
                     <div className="session border-top">
                       <TodayIcon></TodayIcon>
-                      <span className="title-time">Buổi Chiều</span>
+                      <span className="title-time">Buổi chiều</span>
                     </div>
                     <ChooseTime
                       listHour={hourAfternoon}
@@ -621,7 +621,7 @@ export default function Booking() {
                     ></ChooseTime>
                     <div className="session border-top">
                       <TodayIcon></TodayIcon>
-                      <span className="title-time">Buổi Chiều</span>
+                      <span className="title-time">Buổi chiều</span>
                     </div>
                     <ChooseTime
                       listHour={hourAfternoon}
