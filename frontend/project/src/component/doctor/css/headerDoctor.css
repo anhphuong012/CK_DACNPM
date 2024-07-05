@@ -25,14 +25,16 @@
 }
 
 #col_nav {
-    column-gap: 30px;
+    column-gap: 50px;
     align-items: baseline;
+    padding-top: 10px;
 }
 
 .col_menu {
     justify-content: center;
     align-items: center;
     column-gap: 20px;
+    /* padding-top: 1rem; */
 }
 
 .col_menu-text {

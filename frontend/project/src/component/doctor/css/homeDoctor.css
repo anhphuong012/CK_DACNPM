@@ -224,3 +224,11 @@
     background-color: #0d5fda;
     border: 1px solid #0d5fda;
 }
+
+.meBo_list-item:first-child {
+    border: 3px solid var(--primary-color);
+}
+
+.meBo_list-item:not(:first-child) {
+    border: 3px solid var(--secondary-color);
+}

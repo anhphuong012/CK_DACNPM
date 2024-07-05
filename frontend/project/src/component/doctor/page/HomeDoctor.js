@@ -36,8 +36,6 @@ const AppointmentItem = ({ date, time, patientName, phone, status }) => (
       </div>
     </div>
   </li>
-
-  
 );
 
 function HomeDoctor() {
@@ -51,7 +49,12 @@ function HomeDoctor() {
       try {
         const response = await axios.get(`/v1/booking/doctor/${doctorId}`);
         if (response.data.status === 'success') {
-          setAppointments(response.data.data.bookings);
+          const currentDateTime = new Date();
+          const validAppointments = response.data.data.bookings.filter(appointment => {
+            const appointmentDateTime = new Date(`${appointment.date} ${appointment.time}`);
+            return appointmentDateTime > currentDateTime;
+          });
+          setAppointments(validAppointments);
         }
       } catch (error) {
         console.error('Error fetching appointments:', error);
@@ -67,14 +70,13 @@ function HomeDoctor() {
     }
   };
 
-
   return (
     <div id='blk_container-doctor'>
-      <HeaderDoctor/>
+      <HeaderDoctor />
       <div id='container-doctor'>
         <div className='bgr'>
           <div className='bgr_img'>
-            <img src={BrgDoctor} alt='ảnh nền' className='bgr_img-doctor'/>
+            <img src={BrgDoctor} alt='ảnh nền' className='bgr_img-doctor' />
           </div>
           <div className='slogan'>
             <p className='slogan_text-big slogan_text'>Tạo lịch khám dễ dàng,</p>
@@ -90,22 +92,26 @@ function HomeDoctor() {
                 </p>
               </a>
               <div className='rowMeBo_dateTime'>
-                <DateTime/>
+                <DateTime />
               </div>
             </div>
             <div className='rowMeBo_block'>
               <div className='rowMeBo_block-list'>
                 <ul className='meBo_list'>
-                  {appointments.slice(0, visibleRows * 3).map((appointment, index) => (
-                    <AppointmentItem
-                      key={appointment.id}
-                      date={appointment.date}
-                      time={appointment.time}
-                      patientName={appointment.patient.fullName}
-                      phone={appointment.patient.phoneNumber}
-                      status={appointment.status === 1 ? 'Đã đặt' : 'Đã bị hủy'}
-                    />
-                  ))}
+                  {appointments.length === 0 ? (
+                    <p className='no-appointments'>Không có lịch hẹn nào</p>
+                  ) : (
+                    appointments.slice(0, visibleRows * 3).map((appointment, index) => (
+                      <AppointmentItem
+                        key={appointment.id}
+                        date={appointment.date}
+                        time={appointment.time}
+                        patientName={appointment.patient.fullName}
+                        phone={appointment.patient.phoneNumber}
+                        status={appointment.status === 1 ? 'Đã đặt' : 'Đã bị hủy'}
+                      />
+                    ))
+                  )}
                 </ul>
                 {visibleRows * 3 < appointments.length && (
                   <div className='btn_meBo'>
@@ -119,7 +125,7 @@ function HomeDoctor() {
           </div>
         </div>
       </div>
-      <FooterDoctor/>
+      <FooterDoctor />
     </div>
   );
 }

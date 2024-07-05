@@ -37,12 +37,16 @@ export default function LoginPage() {
           var user = response.data.data.user.patient;
           sessionStorage.setItem("user", JSON.stringify(user));
           document.location.href = "/";
-        } else if (response.data.data.role == "admin") {
-        } else if (response.data.data.role == "doctor") {
-          var user = response.data.data.patient;
-          sessionStorage.setItem("doctor", JSON.stringify(user));
-          document.location.href = "/home";
-        } else {
+        } 
+        else if (response.data.data.role == "admin") {
+          
+        } 
+        else if (response.data.data.user.role === "doctor") {
+          const user = response.data.data.user.doctor;
+          sessionStorage.setItem("user", JSON.stringify(user));
+          navigate("/home");
+        }
+        else {
           var user = response.data.data.user.doctor;
           sessionStorage.setItem("user", JSON.stringify(user));
           document.location.href = "/profile-doctors";
