@@ -12,6 +12,7 @@ import HomeDoctor from "./component/doctor/page/HomeDoctor";
 import ProfileDoctor from "./component/doctor/page/profileDoctor";
 import CreateCalendar from "./component/doctor/page/createCalendar";
 import WatchCalendar from "./component/doctor/page/watchCalendar";
+import ForgotPass from "./component/user/page/ForgotPass";
 
 import ManagerUser from "./component/admin/ManagerUser/ManagerUser";
 import ManagerDoctor from "./component/admin/ManagerDoctor/ManagerDoctor";
@@ -25,6 +26,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/forgot-password" element={<ForgotPass />}></Route>
         <Route path="/register" element={<Register />} />
         <Route path="/search/:keyword" element={<ListSearch />} />
         <Route path="/search/" element={<ListSearch />} />
