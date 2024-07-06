@@ -63,7 +63,7 @@ public class DoctorDepartmentController {
 							.body(new ReposeOject("ok", "Query Shedule successfully", result));
 				} else {
 
-					return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					return ResponseEntity.status(HttpStatus.OK)
 							.body(new ReposeOject("error", "Not Found", null));
 
 				}
@@ -80,7 +80,7 @@ public class DoctorDepartmentController {
 					return ResponseEntity.status(HttpStatus.OK)
 							.body(new ReposeOject("ok", "Query Shedule successfully", result));
 				} else {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					return ResponseEntity.status(HttpStatus.OK)
 							.body(new ReposeOject("error", "Not Found", null));
 				}
 			}

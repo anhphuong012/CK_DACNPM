@@ -20,7 +20,7 @@ public class BookingDTO {
 
 	private Long patientId;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern="dd-MM-yyyy")
+//	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern="dd-MM-yyyy")
 	private Date date;
 	
 	private String time;

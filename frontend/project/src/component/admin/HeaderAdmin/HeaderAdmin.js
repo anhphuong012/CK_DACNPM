@@ -52,24 +52,8 @@ export default function HeaderAdmin() {
             SB Admin <sup>2</sup>
           </div>
         </Link>
-        {/* Divider */}
-        {/* <hr className="sidebar-divider my-0" /> */}
-        {/* Nav Item - Infor */}
-        {/* <li className="nav-item active">
-          <a className="nav-link" href="index.html">
-            <i className="fas fa-fw fa-tachometer-alt" />
-            <span>Thông tin</span>
-          </a>
-        </li> */}
-        {/* Divider */}
-        {/* <hr className="sidebar-divider" /> */}
 
-        {/* Nav Item - Quan li san pham */}
-        <li
-          className={`nav-item ${
-            active.current == "user" ? "active-item" : ""
-          }`}
-        >
+        <li className={`nav-item`}>
           <button
             className="nav-link color-white"
             onClick={() => {
@@ -87,11 +71,7 @@ export default function HeaderAdmin() {
         <hr className="sidebar-divider" />
 
         {/* Nav Item - Quan li user */}
-        <li
-          className={`nav-item  ${
-            active.current == "doctor" ? "active-item" : ""
-          }`}
-        >
+        <li className={`nav-item  `}>
           <button
             className={`nav-link color-white `}
             onClick={() => {

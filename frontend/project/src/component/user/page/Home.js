@@ -12,6 +12,9 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+
 import { useNavigate } from "react-router-dom";
 export default function Home() {
   const [inputValue, setInputValue] = useState("");
@@ -127,6 +130,7 @@ export default function Home() {
                 }
               }}
             />
+
             <button
               className="btn-search color-black "
               // href={`/search/${inputValue}`}

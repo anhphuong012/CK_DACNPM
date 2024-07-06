@@ -85,7 +85,7 @@ function HomeDoctor() {
     };
 
     fetchAppointments();
-  }, [doctorId]);
+  }, []);
 
   const handleShowMore = () => {
     if (visibleRows * 3 < appointments.length) {
