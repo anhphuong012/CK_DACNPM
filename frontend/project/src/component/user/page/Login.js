@@ -10,7 +10,6 @@ import axios from "axios";
 import Login_pan from "../img/login_pan.png";
 import "axios";
 
-
 export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -38,16 +37,18 @@ export default function LoginPage() {
           var user = response.data.data.user.patient;
           sessionStorage.setItem("user", JSON.stringify(user));
           document.location.href = "/";
-        } else if (response.data.data.role == "admin") {
+        } else if (response.data.data.user.role == "admin") {
           navigate("/admin/manage-user");
         } else if (response.data.data.user.role === "doctor") {
           const user = response.data.data.user.doctor;
           sessionStorage.setItem("user", JSON.stringify(user));
           navigate("/home");
         } else {
-          var user = response.data.data.user.doctor;
-          sessionStorage.setItem("user", JSON.stringify(user));
-          document.location.href = "/profile-doctors";
+          // var user = response.data.data.user.doctor;
+          // sessionStorage.setItem("user", JSON.stringify(user));
+          // document.location.href = "/profile-doctors";
+          sessionStorage.clear();
+          navigate("/login");
         }
       } else if (response.status == 204) {
         toast.error("Sai tài khoản hoặc mật khẩu");

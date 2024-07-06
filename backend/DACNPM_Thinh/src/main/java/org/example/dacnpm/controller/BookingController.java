@@ -66,7 +66,7 @@ public class BookingController {
 
 			if (save != null) {
 				String text = "Đặt lịch khám bệnh thành công \n" +
-							"Kính gửi: "+booking.getPatient().getFullName() +
+							"Kính gửi: "+booking.getPatient().getFullName() +  " đã đặt lịch khám bệnh ở phòng khám." +
 						"\nMã số: "+booking.getId() +
 						"\nThời  gian: " + booking.getTime() +" ,Ngày " + formatter.format(booking.getDate())+
 						"\nBác sĩ: " + booking.getDoctor().getFullName();

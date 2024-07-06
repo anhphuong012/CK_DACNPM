@@ -31,22 +31,31 @@ export default function ListSearch() {
   }, []);
 
   const fetchData = (keyword) => {
-    const fetchPromise = fetch(`/v1/doctor/search?sick=${keyword}`);
+    setLoad(true);
+    try {
+      const fetchPromise = fetch(`/v1/doctor/search?sick=${keyword}`);
 
-    fetchPromise
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.data != null) {
-          setData(data.data);
-          setLoad(false);
-        }
-      });
+      fetchPromise
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.data != null) {
+            setData(data.data);
+            setLoad(false);
+          } else {
+            setLoad(false);
+          }
+        });
+    } catch (error) {
+      setData([]);
+      setLoad(false);
+    }
   };
 
   const handleSubmit = () => {
     var key = document.getElementById("input-search").value;
 
-    window.location.href = `/search/${key}`;
+    // navigate(`/search/${key}`);
+    document.location.href = `/search/${key}`;
   };
 
   console.log(keyword);
@@ -54,7 +63,8 @@ export default function ListSearch() {
   console.log(data);
 
   const handleBooking = (id) => {
-    document.location.href = `/booking/${id}`;
+    // document.location.href = `/booking/${id}`;
+    navigate(`/booking/${id}`);
   };
 
   //Component thông tin về bác sĩ
@@ -122,8 +132,8 @@ export default function ListSearch() {
                     id="input-search"
                     onKeyPress={(event) => {
                       if (event.key === "Enter") {
-                        // window.location.href = `/search/${event.target.value}`;
-                        navigate(`/search/${event.target.value}`);
+                        window.location.href = `/search/${event.target.value}`;
+                        // navigate(`/search/${event.target.value}`);
                       }
                     }}
                   />
