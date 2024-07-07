@@ -17,6 +17,8 @@ public interface BookingRepository extends CrudRepository<Booking, Long> {
 	List<Booking> findByPatient(Patient patient);
 
 	List<Booking> findByPatientOrderByIdDesc(Patient patient);
+	
+	List<Booking> findByDateAndDoctor(Date date,Doctor doctor);
 
 	@Query("select b from Booking b where b.date = ?1 and b.time =?2 and b.doctor = ?3")
 	Booking findByDateAndTimeAndDoctor(Date date, String time, Doctor doctor);

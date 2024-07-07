@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.example.dacnpm.Service.IBookingService;
+import org.example.dacnpm.Service.ISheduleService;
 import org.example.dacnpm.dto.BookingDTO;
 import org.example.dacnpm.dto.BookingReturnDTO;
 import org.example.dacnpm.dto.DoctorDTO;
 import org.example.dacnpm.dto.PatientDTO;
+import org.example.dacnpm.dto.SheduleDTO;
 import org.example.dacnpm.model.*;
 import org.example.dacnpm.repositories.BookingRepository;
 import org.example.dacnpm.repositories.DoctorRepository;
@@ -41,6 +43,9 @@ public class BookingController {
 	@Autowired
 	private IBookingService bookingService;
 
+	@Autowired
+	private ISheduleService iSheduleService;
+
 	@PostMapping("/add")
 	public @ResponseBody ResponseEntity<ReposeOject> insertBooking(@RequestBody BookingDTO bookingDTO) {
 		Doctor doctor = doctorRepository.findById(bookingDTO.getDoctorId()).get();
@@ -61,17 +66,13 @@ public class BookingController {
 			booking.setTime(bookingDTO.getTime());
 			booking.setStatus(1);
 			Booking save = bookingRepository.save(booking);
-			
-			
 
 			if (save != null) {
-				String text = "Đặt lịch khám bệnh thành công \n" +
-							"Kính gửi: "+booking.getPatient().getFullName() +  " đã đặt lịch khám bệnh ở phòng khám." +
-						"\nMã số: "+booking.getId() +
-						"\nThời  gian: " + booking.getTime() +" ,Ngày " + formatter.format(booking.getDate())+
-						"\nBác sĩ: " + booking.getDoctor().getFullName();
+				String text = "Đặt lịch khám bệnh thành công \n" + "Kính gửi: " + booking.getPatient().getFullName()
+						+ " đã đặt lịch khám bệnh ở phòng khám." + "\nMã số: " + booking.getId() + "\nThời  gian: "
+						+ booking.getTime() + " ,Ngày " + formatter.format(booking.getDate()) + "\nBác sĩ: "
+						+ booking.getDoctor().getFullName();
 
-			
 				SendEmail.sendMail(booking.getPatient().getEmail(), "Thông Báo Đặt Lịch Khám Bệnh", text);
 				return ResponseEntity.status(HttpStatus.OK)
 						.body(new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(save)));
@@ -97,6 +98,8 @@ public class BookingController {
 		List<Booking> bookings = bookingRepository.findByDoctorAndStatus(doctor, 1);
 
 		List<BookingReturnDTO> bookingResult = new ArrayList<>();
+
+		List<SheduleDTO> listSheduleDTOs = new ArrayList<>();
 
 		if (date != null) {
 			List<Booking> bookingOfDate = new ArrayList<>();
@@ -126,6 +129,9 @@ public class BookingController {
 			for (Booking book : bookingOfDate) {
 				bookingResult.add(BookingReturnDTO.convertBookingReturnDTO(book));
 			}
+
+			// Lay lich nghi
+
 		} else {
 			for (Booking book : bookings) {
 				bookingResult.add(BookingReturnDTO.convertBookingReturnDTO(book));
@@ -134,6 +140,20 @@ public class BookingController {
 
 		DoctorDTO result = DoctorDTO.convert(doctor);
 		result.setBookings(bookingResult);
+		
+		List<String> convert = new ArrayList<>();
+		String[] split;
+		String temp;
+		for (String string : date) {
+			split = string.split("-");
+			temp = split[2] +"-"+ split[1] +"-"+split[0];
+			convert.add(temp);
+		}
+		
+		if (iSheduleService.findByDateAndDoctor(doctorId, convert) != null) {
+			result.setShedule(iSheduleService.findByDateAndDoctor(doctorId, convert));
+		}
+		
 		return ResponseEntity.status(HttpStatus.OK).body(new ReposeOject("success", " Success", result));
 
 	}
@@ -156,9 +176,9 @@ public class BookingController {
 
 		PatientDTO result = PatientDTO.convert(patient);
 		result.setBookins(bookingResult);
-		
+
 		for (BookingReturnDTO bookingReturnDTO : bookingResult) {
-			System.out.println(bookingReturnDTO.getId() +"-"+ bookingReturnDTO.getDate());
+			System.out.println(bookingReturnDTO.getId() + "-" + bookingReturnDTO.getDate());
 		}
 
 		return ResponseEntity.status(HttpStatus.OK).body(new ReposeOject("success", " Success", result.getBookins()));

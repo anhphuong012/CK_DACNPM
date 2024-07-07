@@ -45,6 +45,9 @@ public class Doctor {
 	@OneToOne(mappedBy = "doctor")
 	private Account account;
 	
+	@OneToMany(mappedBy = "doctor")
+	private List<Shedule> shedule;
+	
 	
 	public Doctor() {
 		
@@ -125,6 +128,27 @@ public class Doctor {
 		return id;
 	}
 
+
+	public List<Booking> getBookings() {
+		return bookings;
+	}
+
+
+	public void setBookings(List<Booking> bookings) {
+		this.bookings = bookings;
+	}
+
+
+	public List<Shedule> getShedule() {
+		return shedule;
+	}
+
+
+	public void setShedule(List<Shedule> shedule) {
+		this.shedule = shedule;
+	}
+
+	
 
 	
 	
