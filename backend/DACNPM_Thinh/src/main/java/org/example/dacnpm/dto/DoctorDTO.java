@@ -18,6 +18,8 @@ public class DoctorDTO {
 
 	private List<BookingReturnDTO> bookings;
 
+	
+	private List<SheduleDTO> shedule;
 
 
 	public DoctorDTO() {
@@ -112,5 +114,15 @@ public class DoctorDTO {
 	public void setBookings(List<BookingReturnDTO> bookings) {
 		this.bookings = bookings;
 	}
+
+	public List<SheduleDTO> getShedule() {
+		return shedule;
+	}
+
+	public void setShedule(List<SheduleDTO> shedule) {
+		this.shedule = shedule;
+	}
+	
+	
 
 }

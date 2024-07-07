@@ -268,4 +268,8 @@ ul li {
 .listTime.selected {
     background-color: red;
     color: white;
-  }
+}
+.onOff {
+        margin: 10px auto;
+            text-align: center;
+}

@@ -82,7 +82,7 @@ export default function Booking() {
 
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const [dateChoose, setDateChoose] = useState(new Date());
+  const [dateChoose, setDateChoose] = useState(addDays(new Date(), 1));
 
   const [submit, setSubmit] = useState(false);
 
@@ -289,7 +289,7 @@ export default function Booking() {
     setValue(newValue);
     setSelectedButton(null);
 
-    setDateChoose(addDays(new Date(), newValue));
+    setDateChoose(addDays(new Date(), newValue + 1));
     console.log(format(addDays(new Date(), newValue), "dd-MM-yyyy"));
   };
 
@@ -306,6 +306,39 @@ export default function Booking() {
   //Trả về component danh sách thời gian
   const ChooseTime = (props) => {
     console.log(props);
+    var check = false;
+
+    const convertDate = format(dateChoose, "yyyy-MM-dd").toString();
+    console.log("Convert:" + convertDate);
+
+    console.log(
+      props.listHour[0].length == 1
+        ? "0" + props.listHour[0].toString()
+        : props.listHour[0]
+    );
+    const filter = data.shedule.filter((item) => {
+      console.log(
+        (props.listHour[0].length == 1
+          ? "0" + props.listHour[0]
+          : props.listHour[0]) == item.fromTime.split(":")[0]
+      );
+
+      return (
+        item.date.toString() == convertDate &&
+        (props.listHour[0].length == 1
+          ? "0" + props.listHour[0]
+          : props.listHour[0]) == item.fromTime.split(":")[0]
+      );
+    });
+
+    if (filter.length > 0) {
+      check = true;
+    } else {
+      check = false;
+    }
+
+    console.log(check);
+
     return (
       <div>
         <div className="time">
@@ -319,9 +352,9 @@ export default function Booking() {
                    data.bookings != undefined &&
                    data.bookings.map((value) => {
                      if (
-                        value.time == hour + ":" + minute &&
-                        format(addDays(dateChoose, 1), "yyyy-MM-dd") ==
-                          value.date
+                       (value.time == hour + ":" + minute &&
+                         format(dateChoose, "yyyy-MM-dd") == value.date) ||
+                       check
                      ) {
                        console.log(hour + ":" + minute + " disabled ");
                        return " disabled ";
@@ -333,7 +366,7 @@ export default function Booking() {
                  `}
                 onClick={() => handleButtonClick(hour + ":" + minute)}
               >
-                {hour} : {minute} - {" "}
+                {hour} : {minute} -{" "}
                 {minute == "45"
                   ? (parseInt(hour) + 1).toString() + " : 00"
                   : hour + " : " + (parseInt(minute) + 15).toString()}
@@ -345,6 +378,8 @@ export default function Booking() {
     );
   };
   console.log(value);
+
+  console.log(dateChoose);
   return (
     <div>
       <Header></Header>

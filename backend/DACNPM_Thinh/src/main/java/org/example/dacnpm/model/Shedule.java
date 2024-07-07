@@ -4,7 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -13,83 +16,97 @@ public class Shedule {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private long doctorId;
-    private LocalDate date;
-    private LocalTime fromTime;
-    private LocalTime toTime;
+    private Date date;
+    private String fromTime;
+    private String toTime;
+    
+    @ManyToOne
+	@JoinColumn(name = "doctor_id",nullable = false)
+	private Doctor doctor;
+    
+    
     private boolean status;
 
+
     public Shedule() {
+    	
     }
+    
+    
+    
+	public Shedule(long id, Date date, String fromTime, String toTime, Doctor doctor, boolean status) {
+		super();
+		this.id = id;
+		this.date = date;
+		this.fromTime = fromTime;
+		this.toTime = toTime;
+		this.doctor = doctor;
+		this.status = status;
+	}
 
-    public Shedule( long doctorId, LocalDate date, LocalTime fromTime, LocalTime toTime, boolean status) {
-        this.id = id;
-        this.doctorId = doctorId;
-        this.date = date;
-        this.fromTime = fromTime;
-        this.toTime = toTime;
-        this.status = status;
-    }
 
-    public long getId() {
-        return id;
-    }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+	public long getId() {
+		return id;
+	}
 
-    public long getDoctorId() {
-        return doctorId;
-    }
 
-    public void setDoctorId(long doctorId) {
-        this.doctorId = doctorId;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public LocalDate getDate() {
-        return date;
-    }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+	public Date getDate() {
+		return date;
+	}
 
-    public LocalTime getFromTime() {
-        return fromTime;
-    }
 
-    public void setFromTime(LocalTime fromTime) {
-        this.fromTime = fromTime;
-    }
+	public void setDate(Date date) {
+		this.date = date;
+	}
 
-    public LocalTime getToTime() {
-        return toTime;
-    }
 
-    public void setToTime(LocalTime toTime) {
-        this.toTime = toTime;
-    }
+	public String getFromTime() {
+		return fromTime;
+	}
 
-    public boolean isStatus() {
-        return status;
-    }
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
+	public void setFromTime(String fromTime) {
+		this.fromTime = fromTime;
+	}
 
-    @Override
-    public String toString() {
-        return "Shedule{" +
-                "id=" + id +
-                ", doctorId=" + doctorId +
-                ", date=" + date +
-                ", fromTime=" + fromTime +
-                ", toTime=" + toTime +
-                ", status=" + status +
-                '}';
-    }
 
+	public String getToTime() {
+		return toTime;
+	}
+
+
+	public void setToTime(String toTime) {
+		this.toTime = toTime;
+	}
+
+
+	public Doctor getDoctor() {
+		return doctor;
+	}
+
+
+	public void setDoctor(Doctor doctor) {
+		this.doctor = doctor;
+	}
+
+
+	public boolean isStatus() {
+		return status;
+	}
+
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+   
+    
+   
 
 }
