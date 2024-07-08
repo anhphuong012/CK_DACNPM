@@ -160,7 +160,7 @@ export default function Booking() {
             {props.props.degree == "" ? "Bác sĩ" : props.props.degree}
           </p>
           <p className="emailDoctor mt-2">
-            <b> Chuyên khoa::</b> {props.props.department}
+            <b> Chuyên khoa:</b> {props.props.department}
           </p>
           <p className="phoneDoctor mt-2">
             <b>Nơi Làm Việc:</b> {props.props.placeOfwork}
@@ -372,7 +372,7 @@ export default function Booking() {
   };
 
   return (
-    <div>
+    <div className="container-wC">
       <Header></Header>
       {isError && (
         <div className={"status"}>
