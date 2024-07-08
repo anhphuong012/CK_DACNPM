@@ -5,67 +5,77 @@ import "../css/homeDoctor.css";
 import BrgDoctor from "../img/bgr2.png";
 import DateTime from "./DateTime";
 import axios from "axios";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
-const AppointmentItem = ({ date, time, patientName, phone, status }) => (
-  <li className="meBo_list-item">
-    <div className="meBo_item-left">
-      <div className="meBo_items">
-        <p className="meBo-date meBo-text text-notMargin">Ngày hẹn:</p>
-        <p className="meBo_date-text meBo-text text-notMargin">
-          {format(new Date(date), "dd/MM/yyyy")}
-        </p>
-      </div>
-      <div className="meBo_items">
-        <p className="meBo-time meBo-text text-notMargin">Thời gian hẹn:</p>
-        <p className="meBo_time-text meBo-text text-notMargin">{time}</p>
-      </div>
-      <div className="meBo_items">
-        <p className="meBo-namePatients meBo-text text-notMargin">
-          Tên bệnh nhân:
-        </p>
-        <p className="meBo_namePatients-text meBo-text text-notMargin">
-          {patientName}
-        </p>
-      </div>
-      <div className="meBo_items">
-        <p className="meBo-numberPhone meBo-text text-notMargin">
-          Số điện thoại:
-        </p>
-        <p className="meBo_numberPhone-text meBo-text text-notMargin">
-          {phone}
-        </p>
-      </div>
-    </div>
-    <div className="meBo_item-right">
-      <div className="meBo_items meBo_blk">
-        <p className="meBo_blk-status meBo-text text-notMargin">Trạng thái:</p>
-      </div>
-      <div className="meBo_items-status">
-        <div className={`btn_status btn_status-${status.toLowerCase()}`}>
-          {status}
+const STATUS = {
+  BOOKED: 1,
+  CANCELED: 0,
+};
+
+const AppointmentItem = ({ date, time, patientName, phone, status }) => {
+  const statusText = status === STATUS.BOOKED ? "booked" : "canceled";
+  return (
+    <li className="meBo_list-item">
+      <div className="meBo_item-left">
+        <div className="meBo_items">
+          <p className="meBo-date meBo-text text-notMargin">Ngày hẹn:</p>
+          <p className="meBo_date-text meBo-text text-notMargin">
+            {format(new Date(date), "dd/MM/yyyy")}
+          </p>
+        </div>
+        <div className="meBo_items">
+          <p className="meBo-time meBo-text text-notMargin">Thời gian hẹn:</p>
+          <p className="meBo_time-text meBo-text text-notMargin">{time}</p>
+        </div>
+        <div className="meBo_items">
+          <p className="meBo-namePatients meBo-text text-notMargin">
+            Tên bệnh nhân:
+          </p>
+          <p className="meBo_namePatients-text meBo-text text-notMargin">
+            {patientName}
+          </p>
+        </div>
+        <div className="meBo_items">
+          <p className="meBo-numberPhone meBo-text text-notMargin">
+            Số điện thoại:
+          </p>
+          <p className="meBo_numberPhone-text meBo-text text-notMargin">
+            {phone}
+          </p>
         </div>
       </div>
-    </div>
-  </li>
-);
+      <div className="meBo_item-right">
+        <div className="meBo_items meBo_blk">
+          <p className="meBo_blk-status meBo-text text-notMargin">Trạng thái:</p>
+        </div>
+        <div className="meBo_items-status">
+          <div className={`btn_status btn_status-${statusText}`}>
+            {status === STATUS.BOOKED ? "Đã đặt" : "Đã bị hủy"}
+          </div>
+        </div>
+      </div>
+    </li>
+  );
+};
 
 function HomeDoctor() {
   const [visibleRows, setVisibleRows] = useState(2);
   const [appointments, setAppointments] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const navigate = useNavigate();
-
-  const doctorId = 3; // Thay đổi ID bác sĩ tương ứng
 
   useEffect(() => {
     const fetchAppointments = async () => {
-      if (sessionStorage.getItem("user") == null) {
+      const user = sessionStorage.getItem("user");
+
+      if (!user) {
         navigate("/login");
       } else {
         try {
-          const doctor = JSON.parse(sessionStorage.getItem("user"));
+          const doctor = JSON.parse(user);
           const response = await axios.get(`/v1/booking/doctor/${doctor.id}`);
+          
           if (response.data.status === "success") {
             const currentDateTime = new Date();
             const validAppointments = response.data.data.bookings.filter(
@@ -77,6 +87,8 @@ function HomeDoctor() {
               }
             );
             setAppointments(validAppointments);
+          } else {
+            console.error("Failed to fetch appointments:", response.data.message);
           }
         } catch (error) {
           console.error("Error fetching appointments:", error);
@@ -85,13 +97,26 @@ function HomeDoctor() {
     };
 
     fetchAppointments();
-  }, []);
+  }, [navigate]);
 
   const handleShowMore = () => {
     if (visibleRows * 3 < appointments.length) {
       setVisibleRows(visibleRows + 2);
     }
   };
+
+  const getNextSevenDays = () => {
+    const today = new Date();
+    return Array.from({ length: 8 }, (_, i) => addDays(today, i));
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const filteredAppointments = appointments.filter((appointment) =>
+    format(new Date(appointment.date), "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
+  );
 
   return (
     <div id="blk_container-doctor">
@@ -120,29 +145,47 @@ function HomeDoctor() {
                 <DateTime />
               </div>
             </div>
+            <div className="rowMeBo_tabs">
+              {getNextSevenDays().map((date) => (
+                <button
+                  key={date}
+                  className={`tab_button ${
+                    format(date, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
+                      ? "active"
+                      : ""
+                  }`}
+                  onClick={() => handleDateChange(date)}
+                >
+                  {format(date, "dd/MM/yyyy")}
+                </button>
+              ))}
+            </div>
             <div className="rowMeBo_block">
               <div className="rowMeBo_block-list">
-                <ul className="meBo_list">
-                  {appointments.length === 0 ? (
+                {filteredAppointments.length === 0 ? (
+                  <div className="blk-noAppointments">
                     <p className="no-appointments">Không có lịch hẹn nào</p>
-                  ) : (
-                    appointments
+                  </div>
+                ) : (
+                  <ul className="meBo_list">{
+                    filteredAppointments
                       .slice(0, visibleRows * 3)
-                      .map((appointment, index) => (
+                      .map((appointment) => (
                         <AppointmentItem
                           key={appointment.id}
                           date={appointment.date}
                           time={appointment.time}
                           patientName={appointment.patient.fullName}
                           phone={appointment.patient.phoneNumber}
-                          status={
-                            appointment.status === 1 ? "Đã đặt" : "Đã bị hủy"
-                          }
+                          status={appointment.status}
                         />
+
                       ))
-                  )}
-                </ul>
-                {visibleRows * 3 < appointments.length && (
+                    }
+                  </ul>              
+                )}
+                
+                {visibleRows * 3 < filteredAppointments.length && (
                   <div className="btn_meBo">
                     <button
                       className="btn_meBo-seeMore"
