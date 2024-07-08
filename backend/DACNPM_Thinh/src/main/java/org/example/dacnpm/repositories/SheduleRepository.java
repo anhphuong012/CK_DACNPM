@@ -1,7 +1,6 @@
 package org.example.dacnpm.repositories;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 import org.example.dacnpm.model.Doctor;
@@ -14,4 +13,5 @@ public interface SheduleRepository extends JpaRepository<Shedule, Long> {
 //    Shedule findByDoctorIdAndDateAndFromTimeGreaterThanEqualAndToTimeLessThanEqual(long doctorId, LocalDate date, LocalTime fromTime, LocalTime toTime);
     
     List<Shedule> findByDoctor(Doctor doctor);
+    List<Shedule> findByDate(Date date);
 }

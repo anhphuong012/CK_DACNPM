@@ -352,15 +352,15 @@ export default function Booking() {
                    data.bookings != undefined &&
                    data.bookings.map((value) => {
                      if (
-                       (value.time == hour + ":" + minute &&
-                         format(dateChoose, "yyyy-MM-dd") == value.date) ||
-                       check
+                       value.time == hour + ":" + minute &&
+                       format(dateChoose, "yyyy-MM-dd") == value.date
                      ) {
                        console.log(hour + ":" + minute + " disabled ");
                        return " disabled ";
                      }
                    })
-                 } 
+                 }
+                ${check ? " disabled" : ""}
                 ${selectedButton === hour + ":" + minute ? " active " : ""} 
                               
                  `}

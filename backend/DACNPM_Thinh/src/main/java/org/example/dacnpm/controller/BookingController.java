@@ -52,40 +52,49 @@ public class BookingController {
 		Patient patient = patientRepository.findById(bookingDTO.getPatientId()).get();
 
 		System.out.println(bookingDTO.getTime());
-		Booking bookingModel = bookingRepository.findByDateAndTimeAndDoctor(bookingDTO.getDate(), bookingDTO.getTime(),
-				doctor);
+		Booking bookingModel = bookingRepository.findByDateAndTimeAndDoctorAndStatus(bookingDTO.getDate(), bookingDTO.getTime(),
+				doctor,1);
+		
+		boolean checkTimeOff = iSheduleService.checkBookingInOff(bookingDTO);
+		
+		System.out.println("CheckTimeOff:" + checkTimeOff);
+
 
 		System.out.println(bookingDTO.getDate());
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
-		if (bookingModel == null || bookingModel.getStatus() != 1) {
-			Booking booking = new Booking();
-			booking.setDate(bookingDTO.getDate());
-			booking.setDoctor(doctor);
-			booking.setPatient(patient);
-			booking.setTime(bookingDTO.getTime());
-			booking.setStatus(1);
-			Booking save = bookingRepository.save(booking);
+		if(!checkTimeOff) {
+			if (bookingModel == null ) {
+				Booking booking = new Booking();
+				booking.setDate(bookingDTO.getDate());
+				booking.setDoctor(doctor);
+				booking.setPatient(patient);
+				booking.setTime(bookingDTO.getTime());
+				booking.setStatus(1);
+				Booking save = bookingRepository.save(booking);
 
-			if (save != null) {
-				String text = "Đặt lịch khám bệnh thành công \n" + "Kính gửi: " + booking.getPatient().getFullName()
-						+ " đã đặt lịch khám bệnh ở phòng khám." + "\nMã số: " + booking.getId() + "\nThời  gian: "
-						+ booking.getTime() + " ,Ngày " + formatter.format(booking.getDate()) + "\nBác sĩ: "
-						+ booking.getDoctor().getFullName();
+				if (save != null) {
+					String text = "Đặt lịch khám bệnh thành công \n" + "Kính gửi: " + booking.getPatient().getFullName()
+							+ " đã đặt lịch khám bệnh ở phòng khám." + "\nMã số: " + booking.getId() + "\nThời  gian: "
+							+ booking.getTime() + " ,Ngày " + formatter.format(booking.getDate()) + "\nBác sĩ: "
+							+ booking.getDoctor().getFullName();
 
-				SendEmail.sendMail(booking.getPatient().getEmail(), "Thông Báo Đặt Lịch Khám Bệnh", text);
-				return ResponseEntity.status(HttpStatus.OK)
-						.body(new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(save)));
+					SendEmail.sendMail(booking.getPatient().getEmail(), "Thông Báo Đặt Lịch Khám Bệnh", text);
+					return ResponseEntity.status(HttpStatus.OK)
+							.body(new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(save)));
+				} else {
+					return ResponseEntity.status(HttpStatus.OK).body(new ReposeOject("failed", " Error", null));
+				}
+
+//				return ResponseEntity.status(HttpStatus.OK).body(
+//		    			new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(save))
+//		    			);
+
 			} else {
 				return ResponseEntity.status(HttpStatus.OK).body(new ReposeOject("failed", " Error", null));
 			}
-
-//			return ResponseEntity.status(HttpStatus.OK).body(
-//	    			new ReposeOject("OK", " Successful", BookingReturnDTO.convertBookingReturnDTO(save))
-//	    			);
-
-		} else {
-			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ReposeOject("failed", " Error", null));
+		}else {
+			return ResponseEntity.status(HttpStatus.OK).body(new ReposeOject("failed", " Error", null));
 		}
 
 	}
@@ -144,10 +153,12 @@ public class BookingController {
 		List<String> convert = new ArrayList<>();
 		String[] split;
 		String temp;
-		for (String string : date) {
-			split = string.split("-");
-			temp = split[2] +"-"+ split[1] +"-"+split[0];
-			convert.add(temp);
+		if(date != null) {
+			for (String string : date) {
+				split = string.split("-");
+				temp = split[2] +"-"+ split[1] +"-"+split[0];
+				convert.add(temp);
+			}
 		}
 		
 		if (iSheduleService.findByDateAndDoctor(doctorId, convert) != null) {
