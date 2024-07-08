@@ -216,7 +216,7 @@ export default function AddDoctor() {
                 fontWeight: "600",
               }}
             >
-              <span>Hình sản phẩm</span>
+              <span>Hình đại diện bác sĩ</span>
             </div>
             <div className={"d-flex"} style={{ margin: "0px 10%" }}>
               {/* <input

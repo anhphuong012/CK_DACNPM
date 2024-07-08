@@ -19,6 +19,8 @@
 .image-doctor img {
     padding: 10px;
     margin-right: 30px;
+    width: 120px;
+        height: 120px;
 }
 .bg-white {
     --tw-bg-opacity: 1;

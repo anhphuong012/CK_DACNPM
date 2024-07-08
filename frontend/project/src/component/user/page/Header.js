@@ -53,6 +53,8 @@ export default function Headers() {
       setIsLogin(true);
       // Đặt tên người dùng từ đối tượng đã parse vào state userName
       setUserName(userData.fullName);
+
+      console.log(userData);
     } else {
       setIsLogin(false);
     }
