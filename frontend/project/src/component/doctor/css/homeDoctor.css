@@ -134,6 +134,7 @@
     column-gap: 50px;
     overflow-y: auto;
     padding: 15px;
+    margin-top: 15px;
 }
 
 .meBo_list-item {
@@ -202,13 +203,11 @@
     display: none;
 }
 
-
 .btn_meBo {
     width: 100%;
     height: auto;
     display: block;
 }
-
 
 .btn_meBo-seeMore {
     color: #fff;
@@ -231,4 +230,46 @@
 
 .meBo_list-item:not(:first-child) {
     border: 3px solid var(--secondary-color);
+}
+
+.rowMeBo_tabs {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 25px;
+    flex-direction: row;
+    margin-left: -3.5%;
+}
+
+.tab_button {
+    width: 10rem;
+    height: 3rem;
+    font-size: 18px;
+    background-color: #fff;
+    border: 2px #0d5fda solid;
+    border-radius: 8px;
+    font-weight: 400;
+    /* padding: 10px 25px; */
+}
+
+.active {
+    color: #fff;
+    border: 2px solid #e60000;
+    background-color: #e60000;
+}
+
+.blk-noAppointments {
+    width: 100%;
+    margin-top: 30px;
+    
+}
+
+.no-appointments {
+    /* color: #0d5fda; */
+    font-size: 24px;
+}
+
+.rowMeBo_block-list {
+    margin-left: -1%;
 }
