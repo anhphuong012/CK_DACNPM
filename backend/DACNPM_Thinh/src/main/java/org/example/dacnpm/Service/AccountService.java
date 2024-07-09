@@ -201,7 +201,7 @@ public class AccountService implements IAccountService {
 
 	public boolean deleteDoctor(Long id) throws IOException {
 		Account account = accountRepository.findById(id).get();
-		
+
 		if (account == null) {
 			return false;
 		} else {
@@ -255,6 +255,29 @@ public class AccountService implements IAccountService {
 		var verified = signedJWT.verify(verifier);
 
 		return verified && expityTime.after(new Date());
+	}
+
+	public boolean checkPass(String userName, String password) {
+		Account account = accountRepository.findByUsername(userName.trim());
+
+		if (account == null)
+			return false;
+		else {
+			return PasswordEncryption.checkPassword(password, account.getPassword());
+		}
+	}
+
+	public boolean changePass(String userName, String newPass) {
+		Account account = accountRepository.findByUsername(userName.trim());
+
+		if (account == null)
+			return false;
+		else {
+			account.setPassword(PasswordEncryption.hashPassword(newPass));
+			Account save = accountRepository.save(account);
+
+			return save != null;
+		}
 	}
 
 }

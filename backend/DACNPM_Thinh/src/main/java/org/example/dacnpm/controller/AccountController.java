@@ -99,6 +99,21 @@ public class AccountController {
 				.body(new ReposeOject("success", " Success", accountService.deleteDoctor(id)));
 	}
 	
+	
+	@PostMapping("/checkAccount")
+	public @ResponseBody ResponseEntity<ReposeOject> check(@RequestBody Login login){
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ReposeOject("success", " Success", accountService.checkPass(login.getUsername(), login.getPassword())));
+	}
+	
+	
+	@PostMapping("/changePass")
+	public @ResponseBody ResponseEntity<ReposeOject> changePass(@RequestBody Login login){
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ReposeOject("success", " Success", accountService.changePass(login.getUsername(), login.getPassword())));
+	}
+	
+	
 	private RegisterDoctorAccount convertTo(String doctor) {
 		RegisterDoctorAccount result = null;
         ObjectMapper objectMapper = new ObjectMapper();
