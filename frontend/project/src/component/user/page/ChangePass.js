@@ -9,10 +9,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-
-export default function Profile() {
+export default function ChangePass() {
   // const [male, setMale] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
 
@@ -23,29 +20,6 @@ export default function Profile() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [age, setAge] = useState("");
-
-  const [selectShow, setSelectShow] = useState(null);
-  const [show, setShow] = useState(false);
-
-  const [password, setPassword] = useState("");
-  const [newpass, setNewpass] = useState("");
-  const [repasss, setRepass] = useState("");
-
-  const [error, setError] = useState(true);
-  const [messaegePass, setMessagePass] = useState("");
-  const [messNewpass, setMessNewpass] = useState("");
-  const [messRepass, setMessRepass] = useState("");
-
-  const handleClose = () => {
-    setShow(false);
-    setPassword("");
-    setNewpass("");
-    setRepass("");
-    setError(true);
-  };
-  const handleShow = () => {
-    setShow(true);
-  };
 
   const fetchData = async () => {
     try {
@@ -73,82 +47,6 @@ export default function Profile() {
 
   console.log(data);
 
-  useEffect(() => {
-    if (password != "") {
-      axios({
-        method: "post",
-        maxBodyLength: Infinity,
-        url: "/v1/account/checkAccount",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: JSON.stringify({
-          username: phone,
-          password: password,
-        }),
-      }).then(function (response) {
-        console.log(response);
-        if (response.status == 200) {
-          if (response.data.data) {
-            setMessagePass("");
-            if (
-              repasss != "" &&
-              newpass != "" &&
-              newpass.length > 6 &&
-              repasss == newpass
-            ) {
-              setError(false);
-            }
-          } else {
-            setError(true);
-            setMessagePass("Sai mật Khẩu");
-          }
-        }
-      });
-    } else {
-      setMessagePass("");
-    }
-  }, [password]);
-
-  useEffect(() => {
-    if (newpass != "") {
-      if (newpass.length < 6 || newpass == password) {
-        setMessNewpass(
-          "Mật khẩu phải từ 6 kí tự trở lên và không được trùng với mật khẩu cũ"
-        );
-        setError(true);
-      } else {
-        setMessNewpass("");
-      }
-    } else {
-      setMessNewpass("");
-    }
-  }, [newpass]);
-
-  useEffect(() => {
-    if (repasss != "") {
-      if (repasss != newpass) {
-        setMessRepass("Mật khẩu nhập lại không trùng khớp");
-        setError(true);
-      } else {
-        setMessRepass("");
-      }
-    } else {
-      setMessRepass("");
-    }
-  }, [repasss]);
-
-  useEffect(() => {
-    if (repasss == newpass) {
-      setMessRepass("");
-      setError(false);
-    } else {
-      if (repasss != "") {
-        setMessRepass("Mật khẩu nhâp lại không trùng khớp");
-        setError(true);
-      }
-    }
-  }, [repasss, newpass]);
   const update = () => {
     async function updatePost() {
       const requestOptions = {
@@ -191,35 +89,6 @@ export default function Profile() {
     setEmail(data.email);
     setPhone(data.phoneNumber);
     setAge(data.age);
-  };
-
-  const handleChangePass = () => {
-    if (newpass != "" && newpass.length >= 6) {
-      axios({
-        method: "post",
-        maxBodyLength: Infinity,
-        url: "/v1/account/changePass",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: JSON.stringify({
-          username: phone,
-          password: newpass,
-        }),
-      }).then(function (response) {
-        console.log(response);
-        if (response.status == 200) {
-          if (response.data.data) {
-            handleClose();
-            toast.success("Đổi mật khẩu thành công!");
-          } else {
-            toast.error("Đã xảy ra lỗi");
-          }
-        }
-      });
-    } else {
-      toast.error("Đã xảy ra lỗi vui lòng thử lại!");
-    }
   };
 
   console.log(phone);
@@ -336,22 +205,14 @@ export default function Profile() {
                         <div class="row">
                           <div class="col-sm-12">
                             {!isEdit && (
-                              <div>
-                                <button
-                                  class="btn btn-info "
-                                  target="__blank"
-                                  /**Nếu click vào nút edit sẽ trả về  */
-                                  onClick={() => setIsEdit(true)}
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  onClick={handleShow}
-                                  className={"ml-3 btn btn-success"}
-                                >
-                                  Đổi mật khẩu
-                                </button>
-                              </div>
+                              <button
+                                class="btn btn-info "
+                                target="__blank"
+                                /**Nếu click vào nút edit sẽ trả về  */
+                                onClick={() => setIsEdit(true)}
+                              >
+                                Edit
+                              </button>
                             )}
                             {isEdit && (
                               <div>
@@ -387,83 +248,6 @@ export default function Profile() {
             </div>
           )}
         </div>
-
-        {
-          <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Đổi mật khẩu</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div class="mb-3 text-just">
-                <label for="pwd" class="form-label">
-                  Nhập Mật Khẩu Cũ:
-                </label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="pwd"
-                  placeholder="Nhập mật khẩu"
-                  name="pswd"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                />
-                <span className="text-danger">{messaegePass}</span>
-              </div>
-
-              <div class="mb-3 text-just">
-                <label for="pwd" class="form-label">
-                  Nhập Mật Khẩu Mới:
-                </label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="pwd"
-                  placeholder="Nhập mật khẩu mới"
-                  name="pswd"
-                  value={newpass}
-                  onChange={(e) => {
-                    setNewpass(e.target.value);
-                  }}
-                />
-                <span className="text-danger">{messNewpass}</span>
-              </div>
-
-              <div class="mb-3 text-just">
-                <label for="pwd" class="form-label">
-                  Nhập Lại Mật Khẩu Mới:
-                </label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="pwd"
-                  placeholder="Nhập mật khẩu"
-                  name="pswd"
-                  value={repasss}
-                  onChange={(e) => {
-                    setRepass(e.target.value);
-                  }}
-                />
-
-                <span className="text-danger">{messRepass}</span>
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button
-                variant="success"
-                className={`${error ? "disabled" : ""}`}
-                onClick={handleChangePass}
-              >
-                Đổi Mật Khẩu
-              </Button>
-
-              <Button variant="secondary" onClick={handleClose}>
-                Trở Lại
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        }
       </section>
       <Footer></Footer>
     </div>

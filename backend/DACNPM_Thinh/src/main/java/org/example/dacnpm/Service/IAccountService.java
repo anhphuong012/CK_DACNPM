@@ -17,6 +17,8 @@ public interface IAccountService {
 	boolean changeStatusAccount(Long id,String type);
 	AccountDoctorResponse registerDoctor(RegisterDoctorAccount doctor,MultipartFile file);
 	boolean deleteDoctor(Long id) throws IOException;
+	boolean checkPass(String userName, String password);
+	boolean changePass(String userName, String newPass);
 	
 
 }
